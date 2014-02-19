@@ -51,7 +51,7 @@ public:
 	virtual nico::renderer::comment_vertical_position vertical_position() const noexcept { return vertical_position_; }
 	virtual nico::renderer::comment_size size() const noexcept { return size_; }
 	virtual nico::renderer::comment_color color() const noexcept { return color_; }
-	virtual nico::renderer::comment_time time() const noexcept { return 0; }
+	virtual nico::renderer::comment_time time() const noexcept { return nico::renderer::comment_time::zero(); }
 
 private:
 	std::wstring value_;

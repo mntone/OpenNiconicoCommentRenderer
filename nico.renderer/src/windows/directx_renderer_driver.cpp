@@ -58,7 +58,7 @@ comment_time directx_renderer_driver::now() const noexcept
 	FILETIME ft;
 	GetSystemTimeAsFileTime( &ft );
 	const auto& li = *reinterpret_cast<LARGE_INTEGER*>( &ft );
-	return 100 * ( li.QuadPart - base_time_ );
+	return std::chrono::nanoseconds( 100 * ( li.QuadPart - base_time_ ) );
 }
 
 comment_text_info directx_renderer_driver::text_info( comment_position font_size, const wchar_t* text ) const noexcept

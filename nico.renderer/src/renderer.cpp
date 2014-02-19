@@ -150,7 +150,7 @@ comment_position renderer::calculate_left_position( const comment_time time, con
 {
 	return comment.is_not_center()
 		? ( width() - comment.width() ) / 2.0f
-		: width() - static_cast<comment_position>( time - comment.begin_time() ) / static_cast<comment_position>( default_show_time ) * ( width() + comment.width() );
+		: width() - static_cast<comment_position>( ( time - comment.begin_time() ).count() ) / static_cast<comment_position>( default_show_time.count() ) * ( width() + comment.width() );
 }
 
 comment_position renderer::move_up( const rendering_comment& self, const rendering_comment& other )

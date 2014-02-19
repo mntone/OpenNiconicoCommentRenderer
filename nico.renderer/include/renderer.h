@@ -48,8 +48,8 @@ namespace nico { namespace renderer {
 		bool check_overlap_for_bottom( const rendering_comment& comment );
 
 	private:
-		const comment_time default_show_time = 5 * comment_time_seconds;
-		const comment_time top_or_bottom_show_time = 3 * comment_time_seconds;
+		const comment_time default_show_time = std::chrono::seconds( 5 );
+		const comment_time top_or_bottom_show_time = std::chrono::seconds( 3 );
 
 		renderer_driver& driver_;
 		std::mt19937 mt_;

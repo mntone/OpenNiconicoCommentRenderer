@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <deque>
+#include <chrono>
 
 namespace nico { namespace renderer {
 
@@ -32,8 +33,7 @@ namespace nico { namespace renderer {
 	const comment_alpha default_comment_alpha = 1.0f;
 	const comment_alpha overlap_comment_alpha = 0.6f;
 
-	using comment_time = uint64_t; // 1ns unit
-	const comment_time comment_time_seconds = 1000000000;
+	using comment_time = std::chrono::nanoseconds;
 
 	enum class comment_mode: uint8_t { default = 1, top, bottom, both, back };
 
