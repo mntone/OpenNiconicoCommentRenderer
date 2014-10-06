@@ -10,8 +10,7 @@ directx_renderer_driver::directx_renderer_driver()
 {
 	FILETIME ft;
 	GetSystemTimeAsFileTime( &ft );
-	const auto& li = *reinterpret_cast<LARGE_INTEGER*>( &ft );
-	base_time_ = li.QuadPart;
+	base_time_ = *reinterpret_cast<int64_t*>( &ft );
 }
 
 HRESULT directx_renderer_driver::initialize( ID2D1DeviceContext* const d2d_device_context ) noexcept
@@ -57,8 +56,8 @@ comment_time directx_renderer_driver::now() const noexcept
 {
 	FILETIME ft;
 	GetSystemTimeAsFileTime( &ft );
-	const auto& li = *reinterpret_cast<LARGE_INTEGER*>( &ft );
-	return std::chrono::nanoseconds( 100 * ( li.QuadPart - base_time_ ) );
+	const auto& now_time = *reinterpret_cast<int64_t*>( &ft );
+	return std::chrono::nanoseconds( 100 * ( now_time - base_time_ ) );
 }
 
 comment_text_info directx_renderer_driver::text_info( comment_position font_size, const wchar_t* text ) const noexcept

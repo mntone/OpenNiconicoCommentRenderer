@@ -162,6 +162,7 @@ HRESULT directx_window::initialize_device_dependent_resources() noexcept
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Device> d3d_device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> d3d_device_context;
 	hr = D3D11CreateDevice(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -172,13 +173,19 @@ HRESULT directx_window::initialize_device_dependent_resources() noexcept
 		D3D11_SDK_VERSION,
 		d3d_device.GetAddressOf(),
 		nullptr,
-		nullptr );
+		d3d_device_context.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
 		return hr;
 	}
 
 	hr = d3d_device.As( &d3d_device_ );
+	if( FAILED( hr ) )
+	{
+		return hr;
+	}
+
+	hr = d3d_device_context.As( &d3d_device_context_ );
 	if( FAILED( hr ) )
 	{
 		return hr;
@@ -221,6 +228,11 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 	if( dxgi_swap_chain_ != nullptr )
 	{
 		hr = dxgi_swap_chain_->ResizeBuffers( 0, physical_width(), physical_height(), DXGI_FORMAT_B8G8R8A8_UNORM, 0 );
+		if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
+		{
+			hr = handle_devices_lost();
+			return hr;
+		}
 	}
 	else
 	{
@@ -252,8 +264,8 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 		swap_chain_desc.SampleDesc.Quality = 0;
 		swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.BufferCount = 2;
-		swap_chain_desc.Scaling = DXGI_SCALING_STRETCH;
-		swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swap_chain_desc.Scaling = DXGI_SCALING_NONE;
+		swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 		swap_chain_desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 		swap_chain_desc.Flags = 0;
 
@@ -280,7 +292,7 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 	hr = dxgi_swap_chain_->GetBuffer( 0, IID_PPV_ARGS( dxgi_surface_.ReleaseAndGetAddressOf() ) );
 	if( FAILED( hr ) )
 	{
-		return handle_devices_lost();
+		return hr;
 	}
 
 	D2D1_BITMAP_PROPERTIES1 bitmap_properties = D2D1::BitmapProperties1(
@@ -313,11 +325,16 @@ void directx_window::release_device_dependent_resources() noexcept
 	d2d_device_context_.Reset();
 	d2d_device_.Reset();
 	dxgi_device_.Reset();
+	d3d_device_context_.Reset();
 	d3d_device_.Reset();
 }
 
 void directx_window::release_size_dependent_resources() noexcept
 {
+	d2d_device_context_->SetTarget( nullptr );
+	d3d_device_context_->OMSetRenderTargets( 0, nullptr, nullptr );
+	d3d_device_context_->Flush();
+
 	d2d_bitmap_.Reset();
 	dxgi_surface_.Reset();
 	dxgi_swap_chain_.Reset();
@@ -366,7 +383,7 @@ HRESULT directx_window::prepare_render()
 		hr = dxgi_swap_chain_->Present1( 1, 0, &parameters );
 	}
 
-	if( hr == DXGI_ERROR_DEVICE_REMOVED )
+	if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
 	{
 		hr = handle_devices_lost();
 	}

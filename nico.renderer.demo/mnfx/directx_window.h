@@ -64,7 +64,8 @@ namespace mnfx {
 		const Microsoft::WRL::ComPtr<ID2D1Factory1>& d2d_factory() const noexcept { return d2d_factory_; }
 		const Microsoft::WRL::ComPtr<IDWriteFactory1>& dwrite_factory() const noexcept { return dwrite_factory_; }
 
-		const Microsoft::WRL::ComPtr<ID3D11Device1>& d3d_device() const noexcept { return d3d_device_; }
+		const Microsoft::WRL::ComPtr<ID3D11Device1>& d3d_device() const noexcept{ return d3d_device_; }
+		const Microsoft::WRL::ComPtr<ID3D11DeviceContext1>& d3d_device_context() const noexcept{ return d3d_device_context_; }
 		const Microsoft::WRL::ComPtr<IDXGIDevice2>& dxgi_device() const noexcept { return dxgi_device_; }
 		const Microsoft::WRL::ComPtr<ID2D1Device>& d2d_device() const noexcept { return d2d_device_; }
 		const Microsoft::WRL::ComPtr<ID2D1DeviceContext>& d2d_device_context() const noexcept { return d2d_device_context_; }
@@ -99,6 +100,7 @@ namespace mnfx {
 
 		// device-dependent resources
 		Microsoft::WRL::ComPtr<ID3D11Device1> d3d_device_;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext1> d3d_device_context_;
 		Microsoft::WRL::ComPtr<IDXGIDevice2> dxgi_device_;
 		Microsoft::WRL::ComPtr<ID2D1Device> d2d_device_;
 		Microsoft::WRL::ComPtr<ID2D1DeviceContext> d2d_device_context_;
