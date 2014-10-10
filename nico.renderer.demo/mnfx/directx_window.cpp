@@ -30,15 +30,14 @@
 using namespace mnfx;
 
 directx_window::directx_window()
-	: d2d_factory_( nullptr )
+	: initialized_( false )
+	, d2d_factory_( nullptr )
 	, dwrite_factory_( nullptr )
 	, d3d_device_( nullptr )
-	, dxgi_device_( nullptr )
+	, d3d_device_context_( nullptr )
+	, d2d_device_( nullptr )
 	, d2d_device_context_( nullptr )
-	, dxgi_adapter_( nullptr )
-	, dxgi_factory_( nullptr )
 	, dxgi_swap_chain_( nullptr )
-	, dxgi_surface_( nullptr )
 	, d2d_bitmap_( nullptr )
 { }
 
@@ -73,9 +72,9 @@ HRESULT directx_window::initialize( HINSTANCE hinstance, const window* const par
 	{
 		return hr;
 	}
+	initialized_ = true;
 
 	hr = initialize_size_dependent_resources();
-	initialized_ = true;
 
 	return hr;
 }
@@ -191,19 +190,24 @@ HRESULT directx_window::initialize_device_dependent_resources() noexcept
 		return hr;
 	}
 
-	hr = d3d_device_.As( &dxgi_device_ );
+#if( defined( _WIN32_WINNT ) && _WIN32_WINNT <= _WIN32_WINNT_WIN8 )
+	ComPtr<IDXGIDevice2> dxgi_device;
+#else
+	ComPtr<IDXGIDevice3> dxgi_device;
+#endif
+	hr = d3d_device_.As( &dxgi_device );
 	if( FAILED( hr ) )
 	{
 		return hr;
 	}
 
-	hr = dxgi_device_->SetMaximumFrameLatency( 1 );
+	hr = dxgi_device->SetMaximumFrameLatency( 1 );
 	if( FAILED( hr ) )
 	{
 		return hr;
 	}
 
-	hr = d2d_factory_->CreateDevice( dxgi_device_.Get(), d2d_device_.GetAddressOf() );
+	hr = d2d_factory_->CreateDevice( dxgi_device.Get(), d2d_device_.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
 		return hr;
@@ -227,7 +231,7 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 
 	if( dxgi_swap_chain_ != nullptr )
 	{
-		hr = dxgi_swap_chain_->ResizeBuffers( 0, physical_width(), physical_height(), DXGI_FORMAT_B8G8R8A8_UNORM, 0 );
+		hr = dxgi_swap_chain_->ResizeBuffers( 2, physical_width(), physical_height(), DXGI_FORMAT_B8G8R8A8_UNORM, 0 );
 		if( hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET )
 		{
 			hr = handle_devices_lost();
@@ -236,20 +240,26 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 	}
 	else
 	{
-		Microsoft::WRL::ComPtr<IDXGIAdapter> dxgi_adapter;
-		hr = dxgi_device_->GetAdapter( dxgi_adapter.ReleaseAndGetAddressOf() );
+#if( defined( _WIN32_WINNT ) && _WIN32_WINNT <= _WIN32_WINNT_WIN8 )
+		ComPtr<IDXGIDevice2> dxgi_device;
+#else
+		ComPtr<IDXGIDevice3> dxgi_device;
+#endif
+		hr = d3d_device_.As( &dxgi_device );
 		if( FAILED( hr ) )
 		{
 			return hr;
 		}
 
-		hr = dxgi_adapter.As( &dxgi_adapter_ );
+		ComPtr<IDXGIAdapter> dxgi_adapter;
+		hr = dxgi_device->GetAdapter( dxgi_adapter.GetAddressOf() );
 		if( FAILED( hr ) )
 		{
 			return hr;
 		}
 
-		hr = dxgi_adapter_->GetParent( IID_PPV_ARGS( dxgi_factory_.ReleaseAndGetAddressOf() ) );
+		ComPtr<IDXGIFactory2> dxgi_factory;
+		hr = dxgi_adapter->GetParent( IID_PPV_ARGS( dxgi_factory.GetAddressOf() ) );
 		if( FAILED( hr ) )
 		{
 			return hr;
@@ -269,8 +279,8 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 		swap_chain_desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 		swap_chain_desc.Flags = 0;
 
-		Microsoft::WRL::ComPtr<IDXGISwapChain1> dxgi_swap_chain;
-		hr = dxgi_factory_->CreateSwapChainForHwnd(
+		ComPtr<IDXGISwapChain1> dxgi_swap_chain;
+		hr = dxgi_factory->CreateSwapChainForHwnd(
 			d3d_device_.Get(),
 			hwnd(),
 			&swap_chain_desc,
@@ -289,7 +299,8 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 		return hr;
 	}
 
-	hr = dxgi_swap_chain_->GetBuffer( 0, IID_PPV_ARGS( dxgi_surface_.ReleaseAndGetAddressOf() ) );
+	ComPtr<IDXGISurface> dxgi_back_buffer;
+	hr = dxgi_swap_chain_->GetBuffer( 0, IID_PPV_ARGS( dxgi_back_buffer.ReleaseAndGetAddressOf() ) );
 	if( FAILED( hr ) )
 	{
 		return hr;
@@ -301,7 +312,7 @@ HRESULT directx_window::initialize_size_dependent_resources() noexcept
 		96.0f,
 		96.0f );
 
-	hr = d2d_device_context_->CreateBitmapFromDxgiSurface( dxgi_surface_.Get(), &bitmap_properties, d2d_bitmap_.ReleaseAndGetAddressOf() );
+	hr = d2d_device_context_->CreateBitmapFromDxgiSurface( dxgi_back_buffer.Get(), &bitmap_properties, d2d_bitmap_.ReleaseAndGetAddressOf() );
 	if( FAILED( hr ) )
 	{
 		return hr;
@@ -324,7 +335,6 @@ void directx_window::release_device_dependent_resources() noexcept
 	release_size_dependent_resources();
 	d2d_device_context_.Reset();
 	d2d_device_.Reset();
-	dxgi_device_.Reset();
 	d3d_device_context_.Reset();
 	d3d_device_.Reset();
 }
@@ -336,10 +346,7 @@ void directx_window::release_size_dependent_resources() noexcept
 	d3d_device_context_->Flush();
 
 	d2d_bitmap_.Reset();
-	dxgi_surface_.Reset();
 	dxgi_swap_chain_.Reset();
-	dxgi_factory_.Reset();
-	dxgi_adapter_.Reset();
 }
 
 HRESULT directx_window::handle_devices_lost() noexcept
@@ -363,7 +370,7 @@ HRESULT directx_window::prepare_render()
 {
 	HRESULT hr = S_OK;
 
-	if( d2d_factory_ == nullptr )
+	if( !initialized_ )
 	{
 		return hr;
 	}

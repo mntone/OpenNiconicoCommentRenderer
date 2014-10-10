@@ -204,9 +204,11 @@ HRESULT window::prepare_resize( LPARAM lparam ) noexcept
 {
 	if( initialized_ )
 	{
-		return on_resize(
-			scale_factor_.scale_inverse_y( HIWORD( lparam ) ),
-			scale_factor_.scale_inverse_x( LOWORD( lparam ) ) );
+		const uint16_t& height = scale_factor_.scale_inverse_y( HIWORD( lparam ) );
+		const uint16_t& width = scale_factor_.scale_inverse_x( LOWORD( lparam ) );
+		height_ = height;
+		width_ = width;
+		return on_resize( height, width );
 	}
 	return S_OK;
 }

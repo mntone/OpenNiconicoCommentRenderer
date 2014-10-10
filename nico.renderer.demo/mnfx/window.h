@@ -69,10 +69,8 @@ namespace mnfx {
 		{
 			return S_OK;
 		}
-		virtual HRESULT on_resize( dialog_unit height, dialog_unit width ) noexcept
+		virtual HRESULT on_resize( dialog_unit /*height*/, dialog_unit /*width*/ ) noexcept
 		{
-			height_ = height;
-			width_ = width;
 			return S_OK;
 		}
 		virtual HRESULT on_dpi_changed( const RECT /*suggest*/ ) const noexcept
