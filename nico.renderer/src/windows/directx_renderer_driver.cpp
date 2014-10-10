@@ -2,6 +2,7 @@
 #include "windows/directx_renderer_driver.h"
 #include "rendering_comment.h"
 
+using namespace D2D1;
 using namespace Microsoft::WRL;
 using namespace nico::renderer;
 using namespace nico::renderer::windows;
@@ -20,7 +21,7 @@ HRESULT directx_renderer_driver::initialize( ID2D1DeviceContext* const d2d_devic
 	d2d_device_context_ = d2d_device_context;
 
 	hr = d2d_device_context_->CreateSolidColorBrush(
-		D2D1::ColorF( D2D1::ColorF::White ),
+		ColorF( ColorF::White ),
 		white_solid_color_brush_.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
@@ -28,7 +29,7 @@ HRESULT directx_renderer_driver::initialize( ID2D1DeviceContext* const d2d_devic
 	}
 
 	hr = d2d_device_context_->CreateSolidColorBrush(
-		D2D1::ColorF( D2D1::ColorF::Yellow ),
+		ColorF( ColorF::Yellow ),
 		yellow_solid_color_brush_.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
@@ -102,9 +103,6 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 {
 	HRESULT hr = S_OK;
 
-	d2d_device_context_->BeginDraw();
-	d2d_device_context_->Clear( D2D1::ColorF( D2D1::ColorF::Black ) );
-
 	for( const auto& comment : comments )
 	{
 		if( comment->self() )
@@ -153,7 +151,7 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 		else
 		{
 			hr = d2d_device_context_->CreateSolidColorBrush(
-				D2D1::ColorF( comment->color(), comment->alpha() ),
+				ColorF( comment->color(), comment->alpha() ),
 				brush.GetAddressOf() );
 			if( FAILED( hr ) )
 			{
@@ -167,8 +165,6 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 			brush.Get(),
 			D2D1_DRAW_TEXT_OPTIONS_ENABLE_COLOR_FONT );
 	}
-
-	d2d_device_context_->EndDraw();
 }
 
 HRESULT directx_renderer_driver::create_font( const float font_size, IDWriteTextFormat** text_format ) const noexcept

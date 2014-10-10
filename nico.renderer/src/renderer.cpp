@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "renderer.h"
 
+using namespace std;
 using namespace nico::renderer;
 
 void renderer::add( const comment_base& comment ) noexcept
 {
-	std::lock_guard<std::mutex> lock( *mutex_ );
+	lock_guard<mutex> lock( *mutex_ );
 
 	auto& rc = resources_manager::get( comment );
 	set_time( rc );
@@ -19,18 +20,25 @@ void renderer::render() noexcept
 	const auto& now = driver_.now();
 
 	{
-		std::lock_guard<std::mutex> lock( *mutex_ );
-		const auto& itr = std::remove_if( availble_comments_.begin(), availble_comments_.end(), [&]( rendering_comment* const comment )
+		lock_guard<mutex> lock( *mutex_ );
+		auto itr = availble_comments_.begin();
+		while( itr != availble_comments_.end() )
 		{
-			if( !comment->paused() && now > comment->end_time() )
+			itr = ::std::find_if( itr, availble_comments_.end(), [=]( rendering_comment* const comment )
 			{
-				return true;
+				if( !comment->paused() && now > comment->end_time() )
+				{
+					return true;
+				}
+				comment->set_left( calculate_left_position( now, *comment ) );
+				return false;
+			} );
+			if( itr != availble_comments_.end() )
+			{
+				comments_pool_.push_back( *itr );
+				itr = availble_comments_.erase( itr );
 			}
-			comment->set_left( calculate_left_position( now, *comment ) );
-			return false;
-		} );
-
-		remove( itr, availble_comments_.end() );
+		}
 
 		driver_.render( availble_comments_ );
 	}
@@ -98,7 +106,7 @@ void renderer::set_position( rendering_comment& comment ) noexcept
 	} while( is_loop );
 	if( is_overlap )
 	{
-		comment.set_top( calculate_top_position_in_overlap_mode() );
+		comment.set_top( calculate_top_position_in_overlap_mode( comment ) );
 		comment.set_alpha( overlap_comment_alpha );
 	}
 }
@@ -125,17 +133,17 @@ comment_position renderer::calculate_top_position( const rendering_comment& comm
 	return comment.is_bottom() ? bottom() - comment.height() : top();
 }
 
-comment_position renderer::calculate_top_position_in_overlap_mode() noexcept
+comment_position renderer::calculate_top_position_in_overlap_mode( const rendering_comment& comment ) noexcept
 {
 	//if( std::is_floating_point<comment_position>::value )
 	//{
 		if( mode() == comment_mode::both )
 		{
-			return std::uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
-				? std::uniform_real_distribution<comment_position>( top(), bottom_in_top_mode() )( mt_ )
-				: std::uniform_real_distribution<comment_position>( top_in_bottom_mode(), bottom() )( mt_ );
+			return uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
+				? uniform_real_distribution<comment_position>( top(), bottom_in_top_mode() - comment.height() )( mt_ )
+				: uniform_real_distribution<comment_position>( top_in_bottom_mode(), bottom() - comment.height() )( mt_ );
 		}
-		return std::uniform_real_distribution<comment_position>( top(), bottom() )( mt_ );
+		return uniform_real_distribution<comment_position>( top(), bottom() )( mt_ );
 	//}
 	//if( mode() == comment_mode::both )
 	//{

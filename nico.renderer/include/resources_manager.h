@@ -47,12 +47,6 @@ namespace nico { namespace renderer {
 			availble_comments_.push_back( &comment );
 		}
 
-		void remove( std::deque<rendering_comment*>::iterator from, std::deque<rendering_comment*>::iterator to )
-		{
-			comments_pool_.insert( comments_pool_.end(), from, to );
-			availble_comments_.erase( from, to );
-		}
-
 	protected:
 		mutable std::shared_ptr<std::mutex> mutex_;
 		std::array<rendering_comment, maximum_comment_visible_count> comments_;

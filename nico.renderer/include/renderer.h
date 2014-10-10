@@ -38,7 +38,7 @@ namespace nico { namespace renderer {
 		bool hittest( comment_position a1, comment_position a2, comment_position b1, comment_position b2 );
 	
 		comment_position calculate_top_position( const rendering_comment& comment ) noexcept;
-		comment_position calculate_top_position_in_overlap_mode() noexcept;
+		comment_position calculate_top_position_in_overlap_mode( const rendering_comment& comment ) noexcept;
 		comment_position calculate_left_position( const comment_time time, const rendering_comment& comment ) noexcept;
 
 		comment_position move_up( const rendering_comment& self, const rendering_comment& other );

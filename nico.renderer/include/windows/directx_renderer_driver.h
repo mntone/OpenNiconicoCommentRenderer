@@ -24,12 +24,12 @@ namespace nico { namespace renderer { namespace windows {
 	private:
 		int64_t base_time_;
 
-		IDWriteFactory1* dwrite_factory_;
-		ID2D1DeviceContext* d2d_device_context_;
+		::Microsoft::WRL::ComPtr<IDWriteFactory1> dwrite_factory_;
+		::Microsoft::WRL::ComPtr<ID2D1DeviceContext> d2d_device_context_;
 
-		Microsoft::WRL::ComPtr<IDWriteTextFormat> large_text_format_, medium_text_format_, small_text_format_;
-		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> white_solid_color_brush_;
-		Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> yellow_solid_color_brush_;
+		::Microsoft::WRL::ComPtr<IDWriteTextFormat> large_text_format_, medium_text_format_, small_text_format_;
+		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> white_solid_color_brush_;
+		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> yellow_solid_color_brush_;
 	};
 
 } } }
