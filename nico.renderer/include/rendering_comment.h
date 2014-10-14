@@ -25,16 +25,18 @@ namespace nico { namespace renderer {
 		void pause() noexcept { paused_ = true; }
 		void resume() noexcept { paused_ = false; }
 
-		bool is_not_center() const noexcept { return comment_->vertical_position() != comment_vertical_position::center; };
-		bool is_bottom() const noexcept { return comment_->vertical_position() == comment_vertical_position::bottom; };
+		bool is_not_center() const noexcept { return comment_->vertical_position() != comment_vertical_position_type::center; };
+		bool is_center() const noexcept { return comment_->vertical_position() == comment_vertical_position_type::center; };
+		bool is_bottom() const noexcept { return comment_->vertical_position() == comment_vertical_position_type::bottom; };
 
 		comment_position bottom() const noexcept { return top_ + height_; }
 		comment_position right() const noexcept { return left_ + width_; }
 
 	public:
 		const wchar_t* value() const noexcept { return comment_->value(); }
+		size_t length() const noexcept { return comment_->length(); }
 		bool self() const noexcept { return comment_->self(); }
-		comment_vertical_position vertical_position() const noexcept { return comment_->vertical_position(); };
+		comment_vertical_position_type vertical_position() const noexcept { return comment_->vertical_position(); };
 		comment_color color() const noexcept { return comment_->color(); }
 
 		bool paused() const noexcept { return paused_; }
@@ -58,6 +60,12 @@ namespace nico { namespace renderer {
 		comment_position width() const noexcept { return width_; }
 		void set_width( comment_position value ) noexcept { width_ = std::move( value ); }
 
+		comment_analysis_data analysis_data() const noexcept { return analysis_data_; }
+		void set_analysis_data( comment_analysis_data value ) noexcept { analysis_data_ = std::move( value ); }
+
+		template<typename T>
+		T& extra_data() noexcept { return *reinterpret_cast<T*>( extra_data_ ); }
+
 	private:
 		const comment_base* comment_;
 		bool paused_;
@@ -65,6 +73,8 @@ namespace nico { namespace renderer {
 		comment_alpha alpha_;
 		comment_time begin_time_, end_time_;
 		comment_position top_, left_, height_, width_;
+		comment_analysis_data analysis_data_;
+		void* extra_data_;
 	};
 
 } }

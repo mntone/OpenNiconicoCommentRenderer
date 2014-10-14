@@ -20,9 +20,7 @@ namespace nico { namespace renderer {
 		renderer& operator=( renderer&& ) = delete;
 
 	public:
-		explicit renderer( renderer_driver& driver )
-			: driver_( driver )
-		{ }
+		NICORIMP explicit renderer( renderer_driver& driver );
 
 	public:
 		NICORIMP void add( const comment_base& comment ) noexcept;

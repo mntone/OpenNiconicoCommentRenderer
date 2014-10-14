@@ -27,7 +27,7 @@ namespace nico { namespace renderer {
 	protected:
 		rendering_comment& get( const comment_base& comment )
 		{
-			rendering_comment* buf;
+			rendering_comment* buf = nullptr;
 			if( comments_pool_.empty() )
 			{
 				buf = availble_comments_.front();
@@ -45,6 +45,12 @@ namespace nico { namespace renderer {
 		void add( rendering_comment& comment )
 		{
 			availble_comments_.push_back( &comment );
+		}
+
+		::std::deque<rendering_comment*>::const_iterator remove( ::std::deque<rendering_comment*>::const_iterator itr )
+		{
+			comments_pool_.push_back( *itr );
+			return availble_comments_.erase( itr );
 		}
 
 	protected:

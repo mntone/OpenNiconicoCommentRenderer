@@ -34,8 +34,8 @@ public:
 		std::wstring value,
 		bool self,
 		bool cyalume,
-		nico::renderer::comment_vertical_position vertical_position,
-		nico::renderer::comment_size size,
+		nico::renderer::comment_vertical_position_type vertical_position,
+		nico::renderer::comment_size_type size,
 		nico::renderer::comment_color color )
 		: value_( std::move( value ) )
 		, self_( std::move( self ) )
@@ -46,17 +46,18 @@ public:
 	{ }
 
 	virtual const wchar_t* const value() const noexcept { return value_.c_str(); }
+	virtual size_t length() const noexcept { return value_.length(); }
 	virtual bool self() const noexcept { return self_; }
 	virtual bool cyalume() const noexcept { return cyalume_; }
-	virtual nico::renderer::comment_vertical_position vertical_position() const noexcept { return vertical_position_; }
-	virtual nico::renderer::comment_size size() const noexcept { return size_; }
+	virtual nico::renderer::comment_vertical_position_type vertical_position() const noexcept { return vertical_position_; }
+	virtual nico::renderer::comment_size_type size() const noexcept { return size_; }
 	virtual nico::renderer::comment_color color() const noexcept { return color_; }
 	virtual nico::renderer::comment_time time() const noexcept { return nico::renderer::comment_time::zero(); }
 
 private:
 	std::wstring value_;
 	bool self_, cyalume_;
-	nico::renderer::comment_vertical_position vertical_position_;
-	nico::renderer::comment_size size_;
+	nico::renderer::comment_vertical_position_type vertical_position_;
+	nico::renderer::comment_size_type size_;
 	nico::renderer::comment_color color_;
 };

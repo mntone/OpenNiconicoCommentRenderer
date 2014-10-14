@@ -25,8 +25,8 @@ LRESULT comment_window::window_procedure( window_message message, WPARAM wparam,
 				comment_box_.text(),
 				true,
 				false,
-				nico::renderer::comment_vertical_position::center,
-				nico::renderer::comment_size::medium,
+				nico::renderer::comment_vertical_position_type::center,
+				nico::renderer::comment_size_type::medium,
 				0xffffff );
 			cmtsvr_->post( comment );
 			comment_box_.set_text( L"" );
@@ -40,28 +40,28 @@ LRESULT comment_window::window_procedure( window_message message, WPARAM wparam,
 			top_radio_.set_checked( false );
 			both_radio_.set_checked( false );
 			bottom_radio_.set_checked( false );
-			cmtsvr_->change_mode( nico::renderer::comment_mode::default );
+			cmtsvr_->change_mode( nico::renderer::comment_mode_type::default );
 		}
 		else if( top_radio_.is_self( hwnd ) )
 		{
 			regular_radio_.set_checked( false );
 			both_radio_.set_checked( false );
 			bottom_radio_.set_checked( false );
-			cmtsvr_->change_mode( nico::renderer::comment_mode::top );
+			cmtsvr_->change_mode( nico::renderer::comment_mode_type::top );
 		}
 		else if( both_radio_.is_self( hwnd ) )
 		{
 			regular_radio_.set_checked( false );
 			top_radio_.set_checked( false );
 			bottom_radio_.set_checked( false );
-			cmtsvr_->change_mode( nico::renderer::comment_mode::both );
+			cmtsvr_->change_mode( nico::renderer::comment_mode_type::both );
 		}
 		else if( bottom_radio_.is_self( hwnd ) )
 		{
 			regular_radio_.set_checked( false );
 			top_radio_.set_checked( false );
 			both_radio_.set_checked( false );
-			cmtsvr_->change_mode( nico::renderer::comment_mode::bottom );
+			cmtsvr_->change_mode( nico::renderer::comment_mode_type::bottom );
 		}
 	}
 	return window::window_procedure( message, wparam, lparam, handled );

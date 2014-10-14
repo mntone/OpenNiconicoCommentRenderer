@@ -1,11 +1,11 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "virtual_comment_server.h"
 
 using namespace nico::renderer;
 
 void virtual_comment_server::add_handler(
 	std::function<void( const std::shared_ptr<comment_sample> )> comment_handler,
-	std::function<void( const comment_mode )> comment_mode_handler ) noexcept
+	std::function<void( const comment_mode_type )> comment_mode_handler ) noexcept
 {
 	comment_handler_ = comment_handler;
 	comment_mode_handler_ = comment_mode_handler;
@@ -19,7 +19,7 @@ void virtual_comment_server::post( const std::shared_ptr<comment_sample> comment
 	}
 }
 
-void virtual_comment_server::change_mode( const nico::renderer::comment_mode mode ) const noexcept
+void virtual_comment_server::change_mode( const nico::renderer::comment_mode_type mode ) const noexcept
 {
 	if( comment_mode_handler_ )
 	{
@@ -31,12 +31,15 @@ void virtual_comment_server::autotest() const noexcept
 {
 	if( comment_handler_ )
 	{
-		comment_handler_( std::make_shared<comment_sample>( L"‰üs\nƒeƒXƒg", true, false, comment_vertical_position::center, comment_size::medium, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"‚í‚±‚Â", false, false, comment_vertical_position::center, comment_size::medium, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"ƒvƒ¶‚¿‚á‚ñ‚©‚í‚¢‚¢‚¢‚¢‚¢‚¢‚¢", false, false, comment_vertical_position::center, comment_size::medium, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"Visual Studio is cool!", false, false, comment_vertical_position::bottom, comment_size::small, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"‚È‚ª‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚ ‚¢‚¨‚Â‚«‚ ‚¢B‹“s‹âs", false, false, comment_vertical_position::center, comment_size::medium, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"Super Mario BROS. ƒvƒŒƒC‚µ‚æ‚¤‚º!", false, false, comment_vertical_position::center, comment_size::medium, 0xffffff ) );
-		comment_handler_( std::make_shared<comment_sample>( L"‚Ä‚Á‚Ä‚Á‚Ä[", false, false, comment_vertical_position::center, comment_size::large, 0x00cc66 ) );
+		comment_handler_( std::make_shared<comment_sample>( L"ï¼¾ï¼¾ï¼›", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"ãƒ†ã‚¹ãƒˆ", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"ã‚ã“ã¤", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"â’®â†ä¸¸ã‚´ã‚·ãƒƒã‚¯ (Gulim) åŒ–æ–‡å­—", false, false, comment_vertical_position_type::center, comment_size_type::large, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"â‘´â†æ˜æœ (SimSun) åŒ–æ–‡å­—", false, false, comment_vertical_position_type::center, comment_size_type::large, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"Ëâ†æ˜æœ (PMingLiU) åŒ–æ–‡å­—", false, false, comment_vertical_position_type::center, comment_size_type::large, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"Visual Studio is cool!", false, false, comment_vertical_position_type::bottom, comment_size_type::small, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"ãªãŒã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã‚ã„ãŠã¤ãã‚ã„ã€‚äº¬éƒ½éŠ€è¡Œ", false, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"Super Mario BROS. ãƒ—ãƒ¬ã‚¤ã—ã‚ˆã†ãœ!", false, false, comment_vertical_position_type::center, comment_size_type::medium, 0 ) );
+		comment_handler_( std::make_shared<comment_sample>( L"ã¦ã£ã¦ã£ã¦ãƒ¼", false, false, comment_vertical_position_type::center, comment_size_type::large, 0x00cc66 ) );
 	}
 }

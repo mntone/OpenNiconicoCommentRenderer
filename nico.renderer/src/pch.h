@@ -4,6 +4,7 @@
 
 #include "pchbase.h"
 
+#include <cstdint>
 #include <string>
 #include <array>
 #include <deque>

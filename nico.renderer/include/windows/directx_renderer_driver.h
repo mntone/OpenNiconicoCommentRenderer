@@ -12,10 +12,11 @@ namespace nico { namespace renderer { namespace windows {
 		NICORIMP HRESULT initialize( ID2D1DeviceContext* const d2d_device_context ) noexcept;
 
 		virtual comment_time now() const noexcept;
-		virtual comment_text_info text_info( comment_position font_size, const wchar_t* text ) const noexcept;
+		virtual comment_text_info text_info( rendering_comment& comment ) const noexcept;
 		virtual void render( const std::deque<rendering_comment*>& comments ) noexcept;
 
 	private:
+		HRESULT create_layout( const rendering_comment& comment, IDWriteTextLayout1** layout ) const noexcept;
 		HRESULT create_font( const float font_size, IDWriteTextFormat** text_format ) const noexcept;
 
 	public:

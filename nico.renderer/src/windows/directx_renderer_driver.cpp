@@ -61,36 +61,12 @@ comment_time directx_renderer_driver::now() const noexcept
 	return std::chrono::nanoseconds( 100 * ( now_time - base_time_ ) );
 }
 
-comment_text_info directx_renderer_driver::text_info( comment_position font_size, const wchar_t* text ) const noexcept
+comment_text_info directx_renderer_driver::text_info( rendering_comment& comment ) const noexcept
 {
 	HRESULT hr = S_OK;
 
-	ComPtr<IDWriteTextFormat> text_format;
-	if( font_size == 39.0f )
-	{
-		hr = large_text_format_.As( &text_format );
-	}
-	else if( font_size == 24.0f )
-	{
-		hr = medium_text_format_.As( &text_format );
-	}
-	else if( font_size == 15.0f )
-	{
-		hr = small_text_format_.As( &text_format );
-	}
-	else
-	{
-		hr = create_font( font_size, text_format.GetAddressOf() );
-	}
-
-	ComPtr<IDWriteTextLayout> text_layout;
-	dwrite_factory_->CreateTextLayout(
-		text,
-		static_cast<UINT32>( wcslen( text ) ),
-		text_format.Get(),
-		FLT_MAX,
-		FLT_MAX,
-		text_layout.GetAddressOf() );
+	ComPtr<IDWriteTextLayout1> text_layout;
+	hr = create_layout( comment, text_layout.GetAddressOf() );
 
 	DWRITE_TEXT_METRICS metrics;
 	text_layout->GetMetrics( &metrics );
@@ -101,43 +77,12 @@ comment_text_info directx_renderer_driver::text_info( comment_position font_size
 
 void directx_renderer_driver::render( const std::deque<rendering_comment*>& comments ) noexcept
 {
-	HRESULT hr = S_OK;
-
-	for( const auto& comment : comments )
+	auto func = [=]( const rendering_comment* const comment )
 	{
-		if( comment->self() )
-		{
-			d2d_device_context_->DrawRectangle(
-				D2D1::RectF( comment->left() - 1.0f, comment->top(), comment->right() + 1.0f, comment->bottom() + 1.0f ),
-				yellow_solid_color_brush_.Get() );
-		}
+		HRESULT hr = S_OK;
 
-		ComPtr<IDWriteTextFormat> text_format;
-		if( comment->font_size() == 39.0f )
-		{
-			hr = large_text_format_.As( &text_format );
-		}
-		else if( comment->font_size() == 24.0f )
-		{
-			hr = medium_text_format_.As( &text_format );
-		}
-		else if( comment->font_size() == 15.0f )
-		{
-			hr = small_text_format_.As( &text_format );
-		}
-		else
-		{
-			hr = create_font( comment->font_size(), text_format.GetAddressOf() );
-		}
-
-		ComPtr<IDWriteTextLayout> text_layout;
-		dwrite_factory_->CreateTextLayout(
-			comment->value(),
-			static_cast<UINT32>( wcslen( comment->value() ) ),
-			text_format.Get(),
-			FLT_MAX,
-			FLT_MAX,
-			text_layout.GetAddressOf() );
+		ComPtr<IDWriteTextLayout1> text_layout;
+		create_layout( *comment, text_layout.GetAddressOf() );
 
 		ComPtr<ID2D1SolidColorBrush> brush;
 		if( comment->color() == 0xffffff && comment->alpha() == 1.0f )
@@ -159,18 +104,178 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 			}
 		}
 
-		d2d_device_context_->DrawTextLayout(
-			D2D1::Point2F( comment->left(), comment->top() ),
+		const auto space = 3.f;
+		const auto twiceSpace = 2.f * space;
+
+		ComPtr<ID2D1BitmapRenderTarget> bitmap_render_target;
+		hr = d2d_device_context_->CreateCompatibleRenderTarget(
+			SizeF( comment->width() + twiceSpace, comment->height() + twiceSpace ),
+			bitmap_render_target.GetAddressOf() );
+		if( FAILED( hr ) )
+		{
+			return;
+		}
+
+		bitmap_render_target->BeginDraw();
+		bitmap_render_target->Clear( ColorF( 0, 0.f ) );
+		if( comment->self() )
+		{
+			bitmap_render_target->DrawRectangle(
+				RectF( space - 1.f, space, comment->width() + space + 2.f, comment->height() + space + 1.f ),
+				yellow_solid_color_brush_.Get() );
+		}
+		bitmap_render_target->DrawTextLayout(
+			Point2F( space, space ),
 			text_layout.Get(),
 			brush.Get(),
 			D2D1_DRAW_TEXT_OPTIONS_ENABLE_COLOR_FONT );
+		bitmap_render_target->EndDraw();
+
+		ComPtr<ID2D1Bitmap> d2d_bitmap;
+		bitmap_render_target->GetBitmap( d2d_bitmap.GetAddressOf() );
+
+
+		ComPtr<ID2D1Effect> shadow_effect;
+		d2d_device_context_->CreateEffect( CLSID_D2D1Shadow, shadow_effect.GetAddressOf() );
+		shadow_effect->SetInput( 0, d2d_bitmap.Get() );
+		shadow_effect->SetValue( D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, 1.f );
+		shadow_effect->SetValue( D2D1_SHADOW_PROP_COLOR, Vector4F( 0.f, 0.f, 0.f, 1.f ) );
+		shadow_effect->SetValue( D2D1_SHADOW_PROP_OPTIMIZATION, D2D1_DIRECTIONALBLUR_OPTIMIZATION_QUALITY );
+
+		ComPtr<ID2D1Effect> affine_transform_effect;
+		d2d_device_context_->CreateEffect( CLSID_D2D12DAffineTransform, affine_transform_effect.GetAddressOf() );
+		affine_transform_effect->SetInputEffect( 0, shadow_effect.Get() );
+		affine_transform_effect->SetValue( D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, Matrix3x2F::Translation( 0.7f, 0.7f ) );
+
+
+		ComPtr<ID2D1Effect> shadow_effect2;
+		d2d_device_context_->CreateEffect( CLSID_D2D1Shadow, shadow_effect2.GetAddressOf() );
+		shadow_effect2->SetInput( 0, d2d_bitmap.Get() );
+		shadow_effect2->SetValue( D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, 1.f );
+		if( comment->color() == 0 )
+		{
+			shadow_effect2->SetValue( D2D1_SHADOW_PROP_COLOR, Vector4F( 1.f, 1.f, 1.f, 1.f ) );
+		}
+		else
+		{
+			shadow_effect2->SetValue( D2D1_SHADOW_PROP_COLOR, Vector4F( 0.f, 0.f, 0.f, 1.f ) );
+		}
+		shadow_effect2->SetValue( D2D1_SHADOW_PROP_OPTIMIZATION, D2D1_DIRECTIONALBLUR_OPTIMIZATION_QUALITY );
+
+		ComPtr<ID2D1Effect> affine_transform_effect2;
+		d2d_device_context_->CreateEffect( CLSID_D2D12DAffineTransform, affine_transform_effect2.GetAddressOf() );
+		affine_transform_effect2->SetInputEffect( 0, shadow_effect2.Get() );
+		affine_transform_effect2->SetValue( D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX, Matrix3x2F::Translation( -0.7f, -0.7f ) );
+
+
+		ComPtr<ID2D1Effect> composite_effect;
+		d2d_device_context_->CreateEffect( CLSID_D2D1Composite, &composite_effect );
+		composite_effect->SetInputEffect( 0, affine_transform_effect.Get() );
+		composite_effect->SetInputEffect( 1, affine_transform_effect2.Get() );
+
+		ComPtr<ID2D1Effect> composite_effect2;
+		d2d_device_context_->CreateEffect( CLSID_D2D1Composite, &composite_effect2 );
+		composite_effect2->SetValue( D2D1_COMPOSITE_PROP_MODE, D2D1_COMPOSITE_MODE_DESTINATION_OVER );
+		composite_effect2->SetInput( 0, d2d_bitmap.Get() );
+		composite_effect2->SetInputEffect( 1, composite_effect.Get() );
+
+		auto size = bitmap_render_target->GetSize();
+		d2d_device_context_->DrawImage(
+			composite_effect2.Get(),
+			Point2F( comment->left() - space, comment->top() - space ),
+			RectF( 0.f, 0.f, comment->width() + twiceSpace, comment->height() + twiceSpace ) );
+	};
+
+	for( const auto& comment : comments )
+	{
+		if( comment->alpha() != 1.f && comment->is_center() )
+		{
+			func( comment );
+		}
 	}
+	for( const auto& comment : comments )
+	{
+		if( comment->alpha() == 1.f && comment->is_center() )
+		{
+			func( comment );
+		}
+	}
+	for( const auto& comment : comments )
+	{
+		if( comment->is_not_center() )
+		{
+			func( comment );
+		}
+	}
+}
+
+HRESULT directx_renderer_driver::create_layout( const rendering_comment& comment, IDWriteTextLayout1** layout ) const noexcept
+{
+	HRESULT hr = S_OK;
+
+	ComPtr<IDWriteTextFormat> text_format;
+	if( comment.font_size() == 39.f )
+	{
+		hr = large_text_format_.As( &text_format );
+	}
+	else if( comment.font_size() == 24.f )
+	{
+		hr = medium_text_format_.As( &text_format );
+	}
+	else if( comment.font_size() == 15.f )
+	{
+		hr = small_text_format_.As( &text_format );
+	}
+	else
+	{
+		hr = create_font( comment.font_size(), text_format.GetAddressOf() );
+	}
+	if( FAILED( hr ) )
+	{
+		return hr;
+	}
+
+	ComPtr<IDWriteTextLayout> text_layout;
+	dwrite_factory_->CreateTextLayout(
+		comment.value(),
+		static_cast<UINT32>( comment.length() ),
+		text_format.Get(),
+		FLT_MAX,
+		FLT_MAX,
+		text_layout.GetAddressOf() );
+
+	auto begin = comment.analysis_data()[0].begin;
+	for( auto&& group : comment.analysis_data() )
+	{
+		DWRITE_TEXT_RANGE range = { group.begin - begin, group.end - group.begin + 1 };
+		if( group.font == comment_font_type::ms_p_gothic )
+		{
+			text_layout->SetFontFamilyName( L"‚l‚r ‚oƒSƒVƒbƒN", range );
+		}
+		else if( group.font == comment_font_type::sim_sun )
+		{
+			text_layout->SetFontFamilyName( L"SimSun", range );
+		}
+		else if( group.font == comment_font_type::gulim )
+		{
+			text_layout->SetFontFamilyName( L"Gulim", range );
+		}
+		else if( group.font == comment_font_type::p_ming_li_u )
+		{
+			text_layout->SetFontFamilyName( L"PMingLiU", range );
+		}
+	}
+
+	auto line_height = 1.3f * comment.font_size();
+	text_layout->SetLineSpacing( DWRITE_LINE_SPACING_METHOD_UNIFORM, line_height, 0.75f * line_height );
+
+	text_layout.CopyTo( IID_PPV_ARGS( layout ) );
 }
 
 HRESULT directx_renderer_driver::create_font( const float font_size, IDWriteTextFormat** text_format ) const noexcept
 {
 	return dwrite_factory_->CreateTextFormat(
-		L"‚l‚r ‚oƒSƒVƒbƒN",
+	L"Arial",
 		nullptr,
 		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,

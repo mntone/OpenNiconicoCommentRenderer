@@ -10,7 +10,7 @@ namespace nico { namespace renderer {
 			: is_header_view_( false )
 			, my_top_( top_ )
 			, my_bottom_( bottom_ )
-			, mode_( comment_mode::default )
+			, mode_( comment_mode_type::default )
 		{ }
 		screen_manager( const screen_manager& ) = delete;
 		screen_manager( screen_manager&& ) = delete;
@@ -26,8 +26,8 @@ namespace nico { namespace renderer {
 			set_size();
 		}
 
-		comment_mode mode() const noexcept { return mode_; }
-		void set_mode( comment_mode value ) noexcept
+		comment_mode_type mode() const noexcept { return mode_; }
+		void set_mode( comment_mode_type value ) noexcept
 		{
 			mode_ = std::move( value );
 			set_size();
@@ -40,8 +40,8 @@ namespace nico { namespace renderer {
 	private:
 		void set_size()
 		{
-			my_top_ = mode_ == comment_mode::bottom ? top_in_bottom_mode_ : mode_ == comment_mode::top ? 0 : is_header_view_ ? top_with_header_ : top_;
-			my_bottom_ = mode_ == comment_mode::top ? bottom_in_top_mode_ : bottom_;
+			my_top_ = mode_ == comment_mode_type::bottom ? top_in_bottom_mode_ : mode_ == comment_mode_type::top ? 0 : is_header_view_ ? top_with_header_ : top_;
+			my_bottom_ = mode_ == comment_mode_type::top ? bottom_in_top_mode_ : bottom_;
 		}
 
 	protected:
@@ -64,7 +64,7 @@ namespace nico { namespace renderer {
 
 		bool is_header_view_;
 		comment_position my_top_, my_bottom_;
-		comment_mode mode_;
+		comment_mode_type mode_;
 	};
 
 } }

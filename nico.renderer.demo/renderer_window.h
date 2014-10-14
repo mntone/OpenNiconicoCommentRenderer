@@ -25,7 +25,7 @@ protected:
 
 private:
 	void on_comment( const std::shared_ptr<comment_sample> comment );
-	void on_comment_mode_changed( const comment_mode mode );
+	void on_comment_mode_changed( const comment_mode_type mode );
 
 private:
 	std::shared_ptr<virtual_comment_server> cmtsvr_;

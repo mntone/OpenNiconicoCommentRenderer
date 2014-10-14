@@ -1,14 +1,22 @@
 #include "pch.h"
 #include "renderer.h"
+#include "comment_analyzer.h"
 
 using namespace std;
 using namespace nico::renderer;
+
+renderer::renderer( renderer_driver& driver )
+	: driver_( driver )
+{
+	comment_analyzer::initialize();
+}
 
 void renderer::add( const comment_base& comment ) noexcept
 {
 	lock_guard<mutex> lock( *mutex_ );
 
 	auto& rc = resources_manager::get( comment );
+	comment_analyzer::analysis( rc );
 	set_time( rc );
 	set_width( rc );
 	set_position( rc );
@@ -21,10 +29,10 @@ void renderer::render() noexcept
 
 	{
 		lock_guard<mutex> lock( *mutex_ );
-		auto itr = availble_comments_.begin();
-		while( itr != availble_comments_.end() )
+		auto itr = availble_comments_.cbegin();
+		while( itr != availble_comments_.cend() )
 		{
-			itr = ::std::find_if( itr, availble_comments_.end(), [=]( rendering_comment* const comment )
+			itr = ::std::find_if( itr, availble_comments_.cend(), [=]( rendering_comment* const comment )
 			{
 				if( !comment->paused() && now > comment->end_time() )
 				{
@@ -35,8 +43,7 @@ void renderer::render() noexcept
 			} );
 			if( itr != availble_comments_.end() )
 			{
-				comments_pool_.push_back( *itr );
-				itr = availble_comments_.erase( itr );
+				itr = resources_manager::remove( itr );
 			}
 		}
 
@@ -53,11 +60,11 @@ void renderer::set_time( rendering_comment& comment ) noexcept
 
 void renderer::set_width( rendering_comment& comment ) noexcept
 {
-	comment_text_info text_info = driver_.text_info( comment.font_size(), comment.value() );
+	comment_text_info text_info = driver_.text_info( comment );
 	if( comment.is_not_center() && text_info.width > width() )
 	{
 		comment.set_font_size( comment.font_size() * width() / text_info.width );
-		text_info = driver_.text_info( comment.font_size(), comment.value() );
+		text_info = driver_.text_info( comment );
 	}
 	comment.set_height( text_info.height );
 	comment.set_width( text_info.width );
@@ -135,36 +142,36 @@ comment_position renderer::calculate_top_position( const rendering_comment& comm
 
 comment_position renderer::calculate_top_position_in_overlap_mode( const rendering_comment& comment ) noexcept
 {
-	//if( std::is_floating_point<comment_position>::value )
+	//if( is_floating_point<comment_position>::value )
 	//{
-		if( mode() == comment_mode::both )
+		if( mode() == comment_mode_type::both )
 		{
 			return uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
 				? uniform_real_distribution<comment_position>( top(), bottom_in_top_mode() - comment.height() )( mt_ )
 				: uniform_real_distribution<comment_position>( top_in_bottom_mode(), bottom() - comment.height() )( mt_ );
 		}
-		return uniform_real_distribution<comment_position>( top(), bottom() )( mt_ );
+		return uniform_real_distribution<comment_position>( top(), bottom() - comment.height() )( mt_ );
 	//}
-	//if( mode() == comment_mode::both )
+	//if( mode() == comment_mode_type::both )
 	//{
-	//	return std::uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
-	//		? std::uniform_int_distribution<comment_position>( top(), bottom_in_top_mode() )( mt_ )
-	//		: std::uniform_int_distribution<comment_position>( top_in_bottom_mode(), bottom() )( mt_ );
+	//	return uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
+	//		? uniform_int_distribution<comment_position>( top(), bottom_in_top_mode() )( mt_ )
+	//		: uniform_int_distribution<comment_position>( top_in_bottom_mode(), bottom() )( mt_ );
 	//}
-	//return std::uniform_int_distribution<comment_position>( top(), bottom() )( mt_ );
+	//return uniform_int_distribution<comment_position>( top(), bottom() )( mt_ );
 }
 
 comment_position renderer::calculate_left_position( const comment_time time, const rendering_comment& comment ) noexcept
 {
 	return comment.is_not_center()
-		? ( width() - comment.width() ) / 2.0f
+		? ( width() - comment.width() ) / 2.f
 		: width() - static_cast<comment_position>( ( time - comment.begin_time() ).count() ) / static_cast<comment_position>( default_show_time.count() ) * ( width() + comment.width() );
 }
 
 comment_position renderer::move_up( const rendering_comment& self, const rendering_comment& other )
 {
 	comment_position ret = other.top() - self.height() - 1;
-	if( mode() == comment_mode::both && ret < top_in_bottom_mode() )
+	if( mode() == comment_mode_type::both && ret < top_in_bottom_mode() )
 	{
 		ret = std::min( ret, bottom_in_top_mode() - self.height() );
 	}
@@ -174,7 +181,7 @@ comment_position renderer::move_up( const rendering_comment& self, const renderi
 comment_position renderer::move_down( const rendering_comment& other )
 {
 	comment_position ret = other.bottom() + 1;
-	if( mode() == comment_mode::both && ret > bottom_in_top_mode() - other.height() )
+	if( mode() == comment_mode_type::both && ret > bottom_in_top_mode() - other.height() )
 	{
 		ret = std::max( ret, top_in_bottom_mode() );
 	}

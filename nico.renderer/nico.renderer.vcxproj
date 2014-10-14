@@ -105,6 +105,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\comment_analyzer.h" />
     <ClInclude Include="include\comment_base.h" />
     <ClInclude Include="include\windows\directx_renderer_driver.h" />
     <ClInclude Include="include\pchbase.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\comment_analyzer.cpp" />
     <ClCompile Include="src\windows\directx_renderer_driver.cpp" />
     <ClCompile Include="src\windows\dllmain.cpp" />
     <ClCompile Include="src\nico.renderer.cpp" />
