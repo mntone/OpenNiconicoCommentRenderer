@@ -9,6 +9,11 @@ renderer::renderer( renderer_driver& driver )
 	: driver_( driver )
 {
 	comment_analyzer::initialize();
+
+	for( auto& comment : comments_ )
+	{
+		comment.extra_data_ = driver_.initialize_extra_data();
+	}
 }
 
 void renderer::add( const comment_base& comment ) noexcept
@@ -16,6 +21,7 @@ void renderer::add( const comment_base& comment ) noexcept
 	lock_guard<mutex> lock( *mutex_ );
 
 	auto& rc = resources_manager::get( comment );
+	driver_.release_extra_data( rc.extra_data_ );
 	comment_analyzer::analysis( rc );
 	set_time( rc );
 	set_width( rc );
@@ -29,20 +35,20 @@ void renderer::render() noexcept
 
 	{
 		lock_guard<mutex> lock( *mutex_ );
+		for( auto&& comment : availble_comments_ )
+		{
+			comment->set_left( calculate_left_position( now, *comment ) );
+		}
 		auto itr = availble_comments_.cbegin();
 		while( itr != availble_comments_.cend() )
 		{
 			itr = ::std::find_if( itr, availble_comments_.cend(), [=]( rendering_comment* const comment )
 			{
-				if( !comment->paused() && now > comment->end_time() )
-				{
-					return true;
-				}
-				comment->set_left( calculate_left_position( now, *comment ) );
-				return false;
+				return !comment->paused() && now > comment->end_time();
 			} );
 			if( itr != availble_comments_.end() )
 			{
+				driver_.release_extra_data( ( *itr )->extra_data_ );
 				itr = resources_manager::remove( itr );
 			}
 		}

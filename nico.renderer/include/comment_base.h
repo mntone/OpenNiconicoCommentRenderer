@@ -90,6 +90,9 @@ namespace nico { namespace renderer {
 		virtual comment_time now() const noexcept = 0;
 		virtual comment_text_info text_info( rendering_comment& comment ) const noexcept = 0;
 		virtual void render( const std::deque<rendering_comment*>& comments ) noexcept = 0;
+
+		virtual void* initialize_extra_data() const noexcept = 0;
+		virtual void release_extra_data( void* ptr ) const noexcept = 0;
 	};
 
 } }

@@ -18,6 +18,9 @@ namespace nico { namespace renderer {
 		static bool is_gulim( wchar_t charactor );
 		static bool is_p_ming_liu( wchar_t charactor );
 
+		static bool is_high_surrogate( wchar_t charactor );
+		static bool is_low_surrogate( wchar_t charactor );
+
 	private:
 		static ::std::set<uint32_t> arial_set_, ms_p_gothic_set_, sim_sun_set_, gulim_set_;
 	};

@@ -5,6 +5,7 @@
 #include "pchbase.h"
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <array>
 #include <deque>

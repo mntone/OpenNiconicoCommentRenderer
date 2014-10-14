@@ -5,6 +5,8 @@ namespace nico { namespace renderer {
 
 	class rendering_comment final
 	{
+		friend class renderer;
+
 	public:
 		rendering_comment() = default;
 		rendering_comment( const rendering_comment& ) = delete;

@@ -551,6 +551,16 @@ bool comment_analyzer::is_p_ming_liu( wchar_t charactor )
 		|| charactor == 0x2574;
 }
 
+bool comment_analyzer::is_high_surrogate( wchar_t charactor )
+{
+	return charactor >= 0xd800 && charactor <= 0xdbff;
+}
+
+bool comment_analyzer::is_low_surrogate( wchar_t charactor )
+{
+	return charactor >= 0xdc00 && charactor <= 0xdfff;
+}
+
 void comment_analyzer::analysis( rendering_comment& comment )
 {
 	comment_analysis_data data;
@@ -562,8 +572,17 @@ void comment_analyzer::analysis( rendering_comment& comment )
 	auto gBegin = begin;
 	for( auto p = begin; p != end; ++p )
 	{
+		// high surrogate
+		if( is_high_surrogate( *p ) )
+		{
+			auto q = p + 1;
+			if( q != end && is_low_surrogate( *q ) )
+			{
+				++p;
+			}
+		}
 		// cp1250-1258
-		if( is_arial( *p ) )
+		else if( is_arial( *p ) )
 		{
 			if( font != comment_font_type::arial )
 			{

@@ -70,6 +70,8 @@ HRESULT renderer_window::initialize_size_dependent_resources() noexcept
 	const auto& dpi = 96.0f * physical_width() / 672.0f;
 	d2d_device_context()->SetDpi( dpi, dpi );
 
+	driver_.size_change();
+
 	return hr;
 }
 

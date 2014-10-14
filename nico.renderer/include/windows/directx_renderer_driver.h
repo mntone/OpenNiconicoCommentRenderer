@@ -15,14 +15,20 @@ namespace nico { namespace renderer { namespace windows {
 		virtual comment_text_info text_info( rendering_comment& comment ) const noexcept;
 		virtual void render( const std::deque<rendering_comment*>& comments ) noexcept;
 
+		virtual void* initialize_extra_data() const noexcept;
+		virtual void release_extra_data( void* ptr ) const noexcept;
+
 	private:
-		HRESULT create_layout( const rendering_comment& comment, IDWriteTextLayout1** layout ) const noexcept;
+		HRESULT create_layout( rendering_comment& comment, IDWriteTextLayout1** layout ) const noexcept;
 		HRESULT create_font( const float font_size, IDWriteTextFormat** text_format ) const noexcept;
 
 	public:
 		void set_dwrite_factory( IDWriteFactory1* const value ) noexcept { dwrite_factory_ = value; }
 
+		void size_change() noexcept { size_changed_ = true; }
+
 	private:
+		bool size_changed_;
 		int64_t base_time_;
 
 		::Microsoft::WRL::ComPtr<IDWriteFactory1> dwrite_factory_;
