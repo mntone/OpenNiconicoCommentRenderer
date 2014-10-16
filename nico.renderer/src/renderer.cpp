@@ -16,20 +16,25 @@ renderer::renderer( renderer_driver& driver )
 	}
 }
 
+#if _WINRT_DLL
+void renderer::add( ::Mntone::Nico::Renderer::IComment^ comment ) noexcept
+#else
 void renderer::add( const comment_base& comment ) noexcept
+#endif
 {
 	lock_guard<mutex> lock( *mutex_ );
 
 	auto& rc = resources_manager::get( comment );
 	driver_.release_extra_data( rc.extra_data_ );
+	rc.extra_data_ = driver_.initialize_extra_data();
 	comment_analyzer::analysis( rc );
 	set_time( rc );
-	set_width( rc );
+	set_size( rc );
 	set_position( rc );
 	resources_manager::add( rc );
 }
 
-void renderer::render() noexcept
+void renderer::prepare() noexcept
 {
 	const auto& now = driver_.now();
 
@@ -49,12 +54,17 @@ void renderer::render() noexcept
 			if( itr != availble_comments_.end() )
 			{
 				driver_.release_extra_data( ( *itr )->extra_data_ );
+				( *itr )->extra_data_ = driver_.initialize_extra_data();
 				itr = resources_manager::remove( itr );
 			}
 		}
-
-		driver_.render( availble_comments_ );
 	}
+}
+
+void renderer::render() const noexcept
+{
+	lock_guard<mutex> lock( *mutex_ );
+	driver_.render( availble_comments_ );
 }
 
 void renderer::set_time( rendering_comment& comment ) noexcept
@@ -64,11 +74,20 @@ void renderer::set_time( rendering_comment& comment ) noexcept
 	comment.set_end_time( comment.is_not_center() ? now + top_or_bottom_show_time : now + default_show_time );
 }
 
-void renderer::set_width( rendering_comment& comment ) noexcept
+void renderer::set_size( rendering_comment& comment ) noexcept
 {
 	comment_text_info text_info = driver_.text_info( comment );
+	if( text_info.height > one_third_of_height() )
+	{
+		driver_.release_extra_data( comment.extra_data_ );
+		comment.extra_data_ = driver_.initialize_extra_data();
+		comment.set_font_size( 0.5f * comment.font_size() );
+		text_info = driver_.text_info( comment );
+	}
 	if( comment.is_not_center() && text_info.width > width() )
 	{
+		driver_.release_extra_data( comment.extra_data_ );
+		comment.extra_data_ = driver_.initialize_extra_data();
 		comment.set_font_size( comment.font_size() * width() / text_info.width );
 		text_info = driver_.text_info( comment );
 	}
@@ -150,13 +169,13 @@ comment_position renderer::calculate_top_position_in_overlap_mode( const renderi
 {
 	//if( is_floating_point<comment_position>::value )
 	//{
-		if( mode() == comment_mode_type::both )
-		{
-			return uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
-				? uniform_real_distribution<comment_position>( top(), bottom_in_top_mode() - comment.height() )( mt_ )
-				: uniform_real_distribution<comment_position>( top_in_bottom_mode(), bottom() - comment.height() )( mt_ );
-		}
-		return uniform_real_distribution<comment_position>( top(), bottom() - comment.height() )( mt_ );
+	if( mode() == comment_mode_type::both )
+	{
+		return uniform_int_distribution<uint32_t>( 0, 1 )( mt_ )
+			? uniform_real_distribution<comment_position>( top(), bottom_in_top_mode() - comment.height() )( mt_ )
+			: uniform_real_distribution<comment_position>( top_in_bottom_mode(), bottom() - comment.height() )( mt_ );
+	}
+	return uniform_real_distribution<comment_position>( top(), bottom() - comment.height() )( mt_ );
 	//}
 	//if( mode() == comment_mode_type::both )
 	//{
@@ -170,7 +189,7 @@ comment_position renderer::calculate_top_position_in_overlap_mode( const renderi
 comment_position renderer::calculate_left_position( const comment_time time, const rendering_comment& comment ) noexcept
 {
 	return comment.is_not_center()
-		? ( width() - comment.width() ) / 2.f
+	? ( width() - comment.width() ) / 2.f
 		: width() - static_cast<comment_position>( ( time - comment.begin_time() ).count() ) / static_cast<comment_position>( default_show_time.count() ) * ( width() + comment.width() );
 }
 

@@ -31,7 +31,7 @@ void virtual_comment_server::autotest() const noexcept
 {
 	if( comment_handler_ )
 	{
-		comment_handler_( std::make_shared<comment_sample>( L"＾＾；", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
+		comment_handler_( std::make_shared<comment_sample>( L"1\n2\n3\n4\n5\n6", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
 		comment_handler_( std::make_shared<comment_sample>( L"テスト", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
 		comment_handler_( std::make_shared<comment_sample>( L"わこつ", true, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
 		comment_handler_( std::make_shared<comment_sample>( L"⒮←丸ゴシック (Gulim) 化文字", false, false, comment_vertical_position_type::center, comment_size_type::large, 0xffffff ) );

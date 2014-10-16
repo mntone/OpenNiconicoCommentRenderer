@@ -1,5 +1,9 @@
 #pragma once
 #include "comment_base.h"
+#if _WINRT_DLL
+#include "IComment.h"
+#include "native\comment_wrapper.h"
+#endif
 
 namespace nico { namespace renderer {
 
@@ -8,7 +12,9 @@ namespace nico { namespace renderer {
 		friend class renderer;
 
 	public:
-		rendering_comment() = default;
+		rendering_comment()
+			: comment_( nullptr )
+		{ }
 		rendering_comment( const rendering_comment& ) = delete;
 		rendering_comment( rendering_comment&& ) = delete;
 
@@ -16,9 +22,15 @@ namespace nico { namespace renderer {
 		rendering_comment& operator=( rendering_comment&& ) = delete;
 
 	public:
+#if _WINRT_DLL
+		void set( ::Mntone::Nico::Renderer::IComment^ comment ) noexcept
+		{
+			comment_ = ::std::make_unique<comment_wrapper>( comment );
+#else
 		void set( const comment_base& comment ) noexcept
 		{
 			comment_ = &comment;
+#endif
 			font_size_ = static_cast<comment_position>( comment_->size() );
 			alpha_ = default_comment_alpha;
 			paused_ = false;
@@ -69,7 +81,11 @@ namespace nico { namespace renderer {
 		T& extra_data() noexcept { return *reinterpret_cast<T*>( extra_data_ ); }
 
 	private:
+#if _WINRT_DLL
+		::std::unique_ptr<comment_wrapper> comment_;
+#else
 		const comment_base* comment_;
+#endif
 		bool paused_;
 		comment_position font_size_;
 		comment_alpha alpha_;

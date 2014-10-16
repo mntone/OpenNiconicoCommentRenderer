@@ -58,7 +58,6 @@ namespace nico { namespace renderer {
 		virtual comment_vertical_position_type vertical_position() const noexcept = 0;
 		virtual comment_size_type size() const noexcept = 0;
 		virtual comment_color color() const noexcept = 0;
-		virtual comment_time time() const noexcept = 0; // TS ÉÇÅ[ÉhÇ≈égÇ§
 	};
 
 	struct comment_text_info

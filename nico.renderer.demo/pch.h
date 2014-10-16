@@ -32,6 +32,7 @@
 #include <dwrite_2.h>
 #endif
 
+#define noexcept throw()
 #undef small
 
 #include "./mnfx/directx_window.h"

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7240a421-cf49-476b-938c-b26f4f4fdca2}</ItemsProjectGuid>
+    <ItemsRootNamespace>Mntone_Nico_Renderer</ItemsRootNamespace>
+    <ItemsProjectName>Mntone.Nico.Renderer.Shared</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\comment_analyzer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\comment_base.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\pchbase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\renderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\rendering_comment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\resources_manager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\screen_manager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\windows\directx_renderer_driver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\targetver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)IComment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXDynamicPanelBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXInitializedHandler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXPanelBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingEventArgs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingHandler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXStaticPanelBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\SimpleSamplePanel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\StepTimer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)native\comment_wrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)NicoLiveCommentPanel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\comment_analyzer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\nico.renderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\renderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\windows\directx_renderer_driver.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXHelper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXDynamicPanelBase.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXPanelBase.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingEventArgs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXStaticPanelBase.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\SimpleSamplePanel.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\StepTimer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)native\comment_wrapper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)NicoLiveCommentPanel.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

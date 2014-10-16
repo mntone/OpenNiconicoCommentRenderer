@@ -35,8 +35,8 @@ namespace nico { namespace renderer { namespace windows {
 		::Microsoft::WRL::ComPtr<ID2D1DeviceContext> d2d_device_context_;
 
 		::Microsoft::WRL::ComPtr<IDWriteTextFormat> large_text_format_, medium_text_format_, small_text_format_;
-		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> white_solid_color_brush_;
 		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> yellow_solid_color_brush_;
+		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> foreground_brush_;
 	};
 
 } } }

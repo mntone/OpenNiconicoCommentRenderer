@@ -6,8 +6,8 @@ renderer_window::renderer_window( const std::shared_ptr<virtual_comment_server> 
 	, renderer_( *reinterpret_cast<renderer_driver*>( &driver_ ) )
 {
 	set_text( L"nico renderer demo app" );
-	set_height( 384/1.5 );
-	set_width( 672/1.5 );
+	set_height( 384 );
+	set_width( 672 );
 
 	cmtsvr_->add_handler(
 		std::bind( std::mem_fn( &renderer_window::on_comment ), this, std::placeholders::_1 ),
@@ -77,6 +77,7 @@ HRESULT renderer_window::initialize_size_dependent_resources() noexcept
 
 HRESULT renderer_window::on_render() noexcept
 {
+	renderer_.prepare();
 	d2d_device_context()->BeginDraw();
 	d2d_device_context()->Clear( D2D1::ColorF( D2D1::ColorF::Gray ) );
 	renderer_.render();

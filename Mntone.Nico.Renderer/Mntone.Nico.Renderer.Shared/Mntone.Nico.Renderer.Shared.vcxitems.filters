@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXDynamicPanelBase.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXInitializedHandler.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXPanelBase.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingEventArgs.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingHandler.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXStaticPanelBase.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\StepTimer.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXHelper.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)NicoLiveCommentPanel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\comment_analyzer.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\comment_base.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\pchbase.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\renderer.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\rendering_comment.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\resources_manager.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\screen_manager.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\targetver.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\include\windows\directx_renderer_driver.h">
+      <Filter>native\windows</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Infrastructure\SimpleSamplePanel.h">
+      <Filter>Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)IComment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)native\comment_wrapper.h">
+      <Filter>native</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXDynamicPanelBase.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXPanelBase.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXRenderingEventArgs.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXStaticPanelBase.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\StepTimer.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\DirectXHelper.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)NicoLiveCommentPanel.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\comment_analyzer.cpp">
+      <Filter>native</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\nico.renderer.cpp">
+      <Filter>native</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\renderer.cpp">
+      <Filter>native</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\nico.renderer\src\windows\directx_renderer_driver.cpp">
+      <Filter>native\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Infrastructure\SimpleSamplePanel.cpp">
+      <Filter>Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)native\comment_wrapper.cpp">
+      <Filter>native</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Infrastructure">
+      <UniqueIdentifier>{63ceebcc-0c74-4e5c-a152-56d2af277ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="native">
+      <UniqueIdentifier>{5cb5f3f4-3f88-4ff8-995b-8b2d7f110629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="native\windows">
+      <UniqueIdentifier>{3bdeecb7-b0e7-4c36-addb-433cf59e1fac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

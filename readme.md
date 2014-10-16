@@ -3,12 +3,12 @@
 ## このプロジェクトについて
 C++ 向けのオープンソースな niconico コメント描画再現プロジェクトです。なお、次のプラットフォームにおけるドライバーが付属しています。
 
-- Windows Desktop (DLL、Windows 8.1/8/7 用、XP/Vista は非サポート[1])
-- Windows Runtime (DLL、ストア向けビルド、Windows Runtime 1.3 = Windows 8.1 向け Runtime 用[2])
+- Win32 (DLL、Windows 8.1/8/7 用、XP/Vista は非サポート[1])
+- Windows (コンポーネント、Windows Runtime 1.3 = Windows 8.1/Phone 8.1 向け Runtime 用[2])
 
 ##### 注釈
 1. Visual Studio 2013 の Visual C++ 再頒布可能パッケージが Windows 7 Service Pack 1 以上のサポート
-2. 今後追加
+2. Phone では ＭＳＰゴシック、Gulim、PMingLiU が存在しないので、游ゴシック (デフォルト) および SimSun で代用している。
 
 
 ## 方針
@@ -54,4 +54,4 @@ C++ 向けのオープンソースな niconico コメント描画再現プロジ
 - niconico の API 群を実装するプロジェクト - OpenNiconico
 	[https://github.com/mntone/OpenNiconico](https://github.com/mntone/OpenNiconico)
 
-##### 2014 年 2 月 15 日 最終更新
+##### 2014 年 10 月 16 日 最終更新

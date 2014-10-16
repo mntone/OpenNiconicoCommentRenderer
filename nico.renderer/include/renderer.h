@@ -23,12 +23,17 @@ namespace nico { namespace renderer {
 		NICORIMP explicit renderer( renderer_driver& driver );
 
 	public:
+#if _WINRT_DLL
+		NICORIMP void add( ::Mntone::Nico::Renderer::IComment^ comment ) noexcept;
+#else
 		NICORIMP void add( const comment_base& comment ) noexcept;
-		NICORIMP void render() noexcept;
+#endif
+		NICORIMP void prepare() noexcept;
+		NICORIMP void render() const noexcept;
 
 	private:
 		void set_time( rendering_comment& comment ) noexcept;
-		void set_width( rendering_comment& comment ) noexcept;
+		void set_size( rendering_comment& comment ) noexcept;
 		void set_position( rendering_comment& comment ) noexcept;
 
 		bool hittest_vertically( const rendering_comment& a, const rendering_comment& b );

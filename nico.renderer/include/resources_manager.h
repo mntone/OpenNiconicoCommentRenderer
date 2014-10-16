@@ -25,7 +25,11 @@ namespace nico { namespace renderer {
 		resources_manager& operator=( resources_manager&& ) = delete;
 
 	protected:
+#if _WINRT_DLL
+		rendering_comment& get( ::Mntone::Nico::Renderer::IComment^ comment )
+#else
 		rendering_comment& get( const comment_base& comment )
+#endif
 		{
 			rendering_comment* buf = nullptr;
 			if( comments_pool_.empty() )

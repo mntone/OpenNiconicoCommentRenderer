@@ -29,4 +29,5 @@
 #endif
 #endif
 
+#define noexcept throw()
 #undef small

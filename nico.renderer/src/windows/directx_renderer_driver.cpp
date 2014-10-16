@@ -30,16 +30,16 @@ HRESULT directx_renderer_driver::initialize( ID2D1DeviceContext* const d2d_devic
 	d2d_device_context_ = d2d_device_context;
 
 	hr = d2d_device_context_->CreateSolidColorBrush(
-		ColorF( ColorF::White ),
-		white_solid_color_brush_.GetAddressOf() );
+		ColorF( ColorF::Yellow ),
+		yellow_solid_color_brush_.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
 		return hr;
 	}
 
 	hr = d2d_device_context_->CreateSolidColorBrush(
-		ColorF( ColorF::Yellow ),
-		yellow_solid_color_brush_.GetAddressOf() );
+		ColorF( ColorF::White ),
+		foreground_brush_.GetAddressOf() );
 	if( FAILED( hr ) )
 	{
 		return hr;
@@ -80,7 +80,7 @@ comment_text_info directx_renderer_driver::text_info( rendering_comment& comment
 	DWRITE_TEXT_METRICS metrics;
 	text_layout->GetMetrics( &metrics );
 
- 	comment_text_info info = { metrics.height, metrics.width };
+	comment_text_info info = { metrics.height, metrics.width };
 	return info;
 }
 
@@ -111,19 +111,9 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 			create_layout( *comment, text_layout.GetAddressOf() );
 
 			ComPtr<ID2D1SolidColorBrush> brush;
-			if( comment->color() == 0xffffff && comment->alpha() == 1.0f )
 			{
-				hr = white_solid_color_brush_.As( &brush );
-				if( FAILED( hr ) )
-				{
-					return;
-				}
-			}
-			else
-			{
-				hr = d2d_device_context_->CreateSolidColorBrush(
-					ColorF( comment->color(), comment->alpha() ),
-					brush.GetAddressOf() );
+				foreground_brush_->SetColor( ColorF( comment->color(), comment->alpha() ) );
+				hr = foreground_brush_.As( &brush );
 				if( FAILED( hr ) )
 				{
 					return;
@@ -204,7 +194,7 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 
 			ComPtr<ID2D1Image> d2d_image;
 			composite_effect2->GetOutput( d2d_image.GetAddressOf() );
-			
+
 			d2d_image.CopyTo( &extra_data.image );
 		}
 
@@ -287,7 +277,9 @@ HRESULT directx_renderer_driver::create_layout( rendering_comment& comment, IDWr
 		DWRITE_TEXT_RANGE range = { group.begin - begin, group.end - group.begin + 1 };
 		if( group.font == comment_font_type::ms_p_gothic )
 		{
+#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 			text_layout->SetFontFamilyName( L"‚l‚r ‚oƒSƒVƒbƒN", range );
+#endif
 		}
 		else if( group.font == comment_font_type::sim_sun )
 		{
@@ -295,16 +287,22 @@ HRESULT directx_renderer_driver::create_layout( rendering_comment& comment, IDWr
 		}
 		else if( group.font == comment_font_type::gulim )
 		{
+#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 			text_layout->SetFontFamilyName( L"Gulim", range );
+#endif
 		}
 		else if( group.font == comment_font_type::p_ming_li_u )
 		{
+#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
+			text_layout->SetFontFamilyName( L"SimSun", range );
+#else
 			text_layout->SetFontFamilyName( L"PMingLiU", range );
+#endif
 		}
 	}
 
-	auto line_height = 1.3f * comment.font_size();
-	text_layout->SetLineSpacing( DWRITE_LINE_SPACING_METHOD_UNIFORM, line_height, 0.75f * line_height );
+	auto line_height = 1.34f * comment.font_size();
+	text_layout->SetLineSpacing( DWRITE_LINE_SPACING_METHOD_UNIFORM, line_height, 0.8f * line_height );
 
 	text_layout.CopyTo( &extra_data.layout );
 	extra_data.layout->AddRef();
@@ -317,7 +315,7 @@ HRESULT directx_renderer_driver::create_layout( rendering_comment& comment, IDWr
 HRESULT directx_renderer_driver::create_font( const float font_size, IDWriteTextFormat** text_format ) const noexcept
 {
 	return dwrite_factory_->CreateTextFormat(
-		L"Arial",
+	L"Arial",
 		nullptr,
 		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
@@ -345,4 +343,5 @@ void directx_renderer_driver::release_extra_data( void* ptr ) const noexcept
 		data.layout->Release();
 		data.layout = nullptr;
 	}
+	delete &data;
 }

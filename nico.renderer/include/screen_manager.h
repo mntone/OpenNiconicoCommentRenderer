@@ -34,6 +34,7 @@ namespace nico { namespace renderer {
 		}
 
 	protected:
+		comment_position one_third_of_height() const noexcept { return one_third_of_height_; }
 		comment_position height() const noexcept { return bottom() - top(); }
 		comment_position width() const noexcept { return right() - left(); }
 
@@ -57,6 +58,7 @@ namespace nico { namespace renderer {
 		const comment_position top_ = 0;
 		const comment_position top_with_header_ = 56;
 		const comment_position left_ = 0;
+		const comment_position one_third_of_height_ = 128;
 		const comment_position bottom_ = 384;
 		const comment_position right_ = 672;
 		const comment_position top_in_bottom_mode_ = static_cast<comment_position>( std::is_floating_point<comment_position>::value ? 0.8 * bottom_ : std::ceil( 0.8 * bottom_ ) );
