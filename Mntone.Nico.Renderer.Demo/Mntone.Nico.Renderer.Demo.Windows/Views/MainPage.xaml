@@ -87,6 +87,9 @@
 					<Button
 						Command="{Binding AutoTestCommand}"
 						Content="オートテスト" />
+					<Button
+						Content="リセット"
+						Click="OnResetButtonClick"/>
 				</StackPanel>
 			</Grid>
 		</Grid>

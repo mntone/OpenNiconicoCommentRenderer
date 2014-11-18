@@ -25,6 +25,7 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 		void OnPlayButtonClick( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
 		void OnFullScreenButtonClick( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
 		void OnSwitchToggled( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
+		void OnResetButtonClick( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
 
 		void OnComboBoxSelectionChanged( ::Platform::Object^ sender, ::Windows::UI::Xaml::Controls::SelectionChangedEventArgs^ e );
 

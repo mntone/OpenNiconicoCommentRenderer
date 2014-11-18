@@ -21,6 +21,7 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 		void OnOuterSizeChanged( ::Platform::Object^ sender, ::Windows::UI::Xaml::SizeChangedEventArgs^ e );
 
 		void OnSwitchToggled( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
+		void OnResetButtonClick( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
 
 		void OnOrientationChanged( ::Windows::Graphics::Display::DisplayInformation^ sender, ::Platform::Object^ args );
 

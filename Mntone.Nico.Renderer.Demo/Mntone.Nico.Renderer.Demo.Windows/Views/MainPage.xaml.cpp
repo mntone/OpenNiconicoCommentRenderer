@@ -30,17 +30,20 @@ MainPage::MainPage()
 {
 	InitializeComponent();
 
+	auto wr = WeakReference( this );
 	PageViewModel = ref new ::PageViewModel();
-	PageViewModel->CommentServer->CommentReceived += ref new Core::CommentReceivedEventHandler( [this]( SimpleComment^ comment )
+	PageViewModel->CommentServer->CommentReceived += ref new Core::CommentReceivedEventHandler( [wr]( SimpleComment^ comment )
 	{
-		commentLayer->AddComment( comment );
+		auto that = wr.Resolve<MainPage>();
+		that->commentLayer->AddComment( comment );
 	} );
-	PageViewModel->CommentModeChanged += ref new DependencyPropertyChangedEventHandler( [this]( Object^ sender, DependencyPropertyChangedEventArgs^ e )
+	PageViewModel->CommentModeChanged += ref new DependencyPropertyChangedEventHandler( [wr]( Object^ sender, DependencyPropertyChangedEventArgs^ e )
 	{
 		auto newValue = dynamic_cast<IBox<int32>^>( e->NewValue );
 		if( newValue )
 		{
-			commentLayer->CommentMode = static_cast<CommentModeType>( newValue->Value + 1 );
+			auto that = wr.Resolve<MainPage>();
+			that->commentLayer->CommentMode = static_cast<CommentModeType>( newValue->Value + 1 );
 		}
 	} );
 }
@@ -198,6 +201,11 @@ void MainPage::OnFullScreenButtonClick( Object^ sender, RoutedEventArgs^ e )
 void MainPage::OnSwitchToggled( Object^ sender, RoutedEventArgs^ e )
 {
 	OnOuterSizeChanged( sender, nullptr );
+}
+
+void MainPage::OnResetButtonClick( Object^ sender, RoutedEventArgs^ e )
+{
+	commentLayer->ResetComment();
 }
 
 void MainPage::OnComboBoxSelectionChanged( Object^ sender, SelectionChangedEventArgs^ e )

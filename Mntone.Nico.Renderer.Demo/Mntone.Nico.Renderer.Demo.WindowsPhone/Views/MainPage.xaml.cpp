@@ -29,17 +29,20 @@ MainPage::MainPage()
 	displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>( this, &MainPage::OnOrientationChanged );
 	OnOrientationChanged( displayInformation, nullptr );
 
+	auto wr = WeakReference( this );
 	PageViewModel = ref new ::PageViewModel();
-	PageViewModel->CommentServer->CommentReceived += ref new Core::CommentReceivedEventHandler( [this]( SimpleComment^ comment )
+	PageViewModel->CommentServer->CommentReceived += ref new Core::CommentReceivedEventHandler( [wr]( SimpleComment^ comment )
 	{
-		commentLayer->AddComment( comment );
+		auto that = wr.Resolve<MainPage>();
+		that->commentLayer->AddComment( comment );
 	} );
-	PageViewModel->CommentModeChanged += ref new DependencyPropertyChangedEventHandler( [this]( Object^ sender, DependencyPropertyChangedEventArgs^ e )
+	PageViewModel->CommentModeChanged += ref new DependencyPropertyChangedEventHandler( [wr]( Object^ sender, DependencyPropertyChangedEventArgs^ e )
 	{
 		auto newValue = dynamic_cast<IBox<int32>^>( e->NewValue );
 		if( newValue )
 		{
-			commentLayer->CommentMode = static_cast<CommentModeType>( newValue->Value + 1 );
+			auto that = wr.Resolve<MainPage>();
+			that->commentLayer->CommentMode = static_cast<CommentModeType>( newValue->Value + 1 );
 		}
 	} );
 }
@@ -172,6 +175,11 @@ void MainPage::OnOuterSizeChanged( Object^ sender, SizeChangedEventArgs^ e )
 void MainPage::OnSwitchToggled( Object^ sender, RoutedEventArgs^ e )
 {
 	OnOuterSizeChanged( sender, nullptr );
+}
+
+void MainPage::OnResetButtonClick( Object^ sender, RoutedEventArgs^ e )
+{
+	commentLayer->ResetComment();
 }
 
 void MainPage::OnOrientationChanged( DisplayInformation^ sender, Object^ args )

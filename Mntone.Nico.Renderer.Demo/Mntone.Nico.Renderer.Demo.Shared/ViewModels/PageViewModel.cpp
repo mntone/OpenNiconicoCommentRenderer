@@ -12,83 +12,86 @@ PageViewModel::PageViewModel()
 {
 	CommentServer_ = ref new Core::VirtualCommentServerService();
 
-	SendCommand = ref new RelayCommand( [this]( Object^ )
+	auto wr = WeakReference( this );
+	SendCommand = ref new RelayCommand( [wr]( Object^ )
 	{
-		CommentServer_->AddComment( ref new SimpleComment(
-			Value,
+		auto that = wr.Resolve<PageViewModel>();
+		that->CommentServer_->AddComment( ref new SimpleComment(
+			that->Value,
 			true,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0xffffff ) );
-		Value = "";
+		that->Value = "";
 	} );
-	AutoTestCommand = ref new RelayCommand( [this]( Object^ )
+	AutoTestCommand = ref new RelayCommand( [wr]( Object^ )
 	{
-		CommentServer_->AddComment( ref new SimpleComment(
+		auto that = wr.Resolve<PageViewModel>();
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"1\n2\n3\n4\n5\n6",
 			true,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"テスト",
 			true,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"わこつ",
 			true,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			L"⒮←丸ゴシック (Gulim) 化文字",
 			false,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Large,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			L"⑴←明朝 (SimSun) 化文字",
 			false,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Large,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			L"ˍ←明朝 (PMingLiU) 化文字",
 			false,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Large,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"Visual Studio is cool!",
 			false,
 			false,
 			CommentVerticalPositionType::Bottom,
 			CommentSizeType::Small,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"ながあああああああああああああいおつきあい。京都銀行",
 			false,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0xffffff ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"Super Mario BROS. プレイしようぜ!",
 			false,
 			false,
 			CommentVerticalPositionType::Center,
 			CommentSizeType::Medium,
 			0 ) );
-		CommentServer_->AddComment( ref new SimpleComment(
+		that->CommentServer_->AddComment( ref new SimpleComment(
 			"てってってー",
 			false,
 			false,
