@@ -1,7 +1,7 @@
 #pragma once
 #include "Infrastructure\DirectXDynamicPanelBase.h"
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	public ref class SimpleSamplePanel sealed
 		: public DirectX::DirectXDynamicPanelBase
@@ -20,4 +20,4 @@ namespace Mntone { namespace DirectX {
 		::Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> blackBrush_;
 	};
 
-} }
+} } } }

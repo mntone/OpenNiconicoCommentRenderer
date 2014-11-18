@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	public ref class DirectXRenderingEventArgs sealed
 	{
@@ -23,4 +23,4 @@ namespace Mntone { namespace DirectX {
 		uint64 TotalFrames_;
 	};
 
-} }
+} } } }

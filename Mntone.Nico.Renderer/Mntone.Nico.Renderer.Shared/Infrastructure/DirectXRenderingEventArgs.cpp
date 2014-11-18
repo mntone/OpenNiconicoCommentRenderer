@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "DirectXRenderingEventArgs.h"
 
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 DirectXRenderingEventArgs::DirectXRenderingEventArgs( uint64 totalFrames )
 	: FramesPerSecond_( 0 )

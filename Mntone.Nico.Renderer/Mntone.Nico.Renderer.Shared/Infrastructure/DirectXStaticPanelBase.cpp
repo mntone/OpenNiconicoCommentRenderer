@@ -6,7 +6,7 @@ using namespace Platform;
 using namespace std;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 #define LOCK lock_guard<mutex> locker( mutex_ );
 
@@ -16,7 +16,7 @@ DirectXStaticPanelBase::DirectXStaticPanelBase( DXGI_ALPHA_MODE alphaMode )
 	renderingEventToken_ = Rendering += ref new DirectXRenderingHandler( this, &DirectXStaticPanelBase::OnRendering );
 }
 
-void DirectXStaticPanelBase::OnUnloaded( Object^ sender, RoutedEventArgs^ e )
+DirectXStaticPanelBase::~DirectXStaticPanelBase()
 {
 	Rendering -= renderingEventToken_;
 }

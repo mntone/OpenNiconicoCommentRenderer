@@ -141,7 +141,11 @@ void directx_renderer_driver::render( const std::deque<rendering_comment*>& comm
 				Point2F( space, space ),
 				text_layout.Get(),
 				brush.Get(),
+#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
+				static_cast<D2D1_DRAW_TEXT_OPTIONS>( 0x00000004 ) );
+#else
 				D2D1_DRAW_TEXT_OPTIONS_ENABLE_COLOR_FONT );
+#endif
 			bitmap_render_target->EndDraw();
 
 			ComPtr<ID2D1Bitmap> d2d_bitmap;

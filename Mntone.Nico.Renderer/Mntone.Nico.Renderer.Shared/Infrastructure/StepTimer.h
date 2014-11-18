@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	class StepTimer final
 	{
@@ -36,4 +36,4 @@ namespace Mntone { namespace DirectX {
 		uint64 totalFrames_;
 	};
 
-} }
+} } } }

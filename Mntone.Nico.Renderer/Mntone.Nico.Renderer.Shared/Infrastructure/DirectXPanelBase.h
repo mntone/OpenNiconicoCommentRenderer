@@ -4,7 +4,7 @@
 
 #pragma warning( disable: 4486 )
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class DirectXPanelBase
@@ -12,6 +12,9 @@ namespace Mntone { namespace DirectX {
 	{
 	protected private:
 		DirectXPanelBase( DXGI_ALPHA_MODE alphaMode );
+
+	public:
+		virtual ~DirectXPanelBase();
 
 	protected:
 		void Initialize();
@@ -26,7 +29,6 @@ namespace Mntone { namespace DirectX {
 
 		virtual void OnSuspending( ::Platform::Object^ sender, ::Windows::ApplicationModel::SuspendingEventArgs^ e );
 		virtual void OnResuming( ::Platform::Object^ sender, ::Platform::Object^ args );
-		virtual void OnUnloaded( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e );
 		virtual void OnSizeChanged( ::Platform::Object^ sender, ::Windows::UI::Xaml::SizeChangedEventArgs^ e );
 		virtual void OnCompositionScaleChanged( ::Windows::UI::Xaml::Controls::SwapChainPanel^ sender, ::Platform::Object^ args );
 		virtual void OnDpiChanged( ::Windows::Graphics::Display::DisplayInformation^ sender, ::Platform::Object^ args );
@@ -71,7 +73,6 @@ namespace Mntone { namespace DirectX {
 		::Windows::Foundation::EventRegistrationToken
 			suspendingEventToken_,
 			resumingEventToken_,
-			unloadedEventToken_,
 			sizeChangedEventToken_,
 			compositionScaleChangedEventToken_,
 			dpiChangedEventToken_,
@@ -81,4 +82,4 @@ namespace Mntone { namespace DirectX {
 			sizeResourcesInitializedEventToken_;
 	};
 
-} }
+} } } }

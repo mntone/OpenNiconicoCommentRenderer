@@ -16,6 +16,11 @@ renderer::renderer( renderer_driver& driver )
 	}
 }
 
+void renderer::reset() noexcept
+{
+	resources_manager::reset();
+}
+
 #if _WINRT_DLL
 void renderer::add( ::Mntone::Nico::Renderer::IComment^ comment ) noexcept
 #else

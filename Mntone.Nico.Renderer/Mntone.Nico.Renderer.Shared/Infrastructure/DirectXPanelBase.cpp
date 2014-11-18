@@ -15,7 +15,7 @@ using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 #define LOCK lock_guard<mutex> locker( mutex_ );
 
@@ -30,7 +30,6 @@ DirectXPanelBase::DirectXPanelBase( DXGI_ALPHA_MODE alphaMode )
 {
 	suspendingEventToken_ = Application::Current->Suspending += ref new SuspendingEventHandler( this, &DirectXPanelBase::OnSuspending );
 	resumingEventToken_ = Application::Current->Resuming += ref new EventHandler<Object^>( this, &DirectXPanelBase::OnResuming );
-	unloadedEventToken_ = Unloaded += ref new RoutedEventHandler( this, &DirectXPanelBase::OnUnloaded );
 	sizeChangedEventToken_ = SizeChanged += ref new SizeChangedEventHandler( this, &DirectXPanelBase::OnSizeChanged );
 	compositionScaleChangedEventToken_ = CompositionScaleChanged += ref new TypedEventHandler<SwapChainPanel^, Object^>( this, &DirectXPanelBase::OnCompositionScaleChanged );
 	
@@ -45,15 +44,7 @@ DirectXPanelBase::DirectXPanelBase( DXGI_ALPHA_MODE alphaMode )
 	sizeResourcesInitializedEventToken_ = SizeDependentResourcesInitialized += ref new DirectXInitializedHandler( this, &DirectXPanelBase::OnSizeDependentResourcesInitialized );
 }
 
-void DirectXPanelBase::Initialize()
-{
-	LOCK;
-	InitializeDeviceIndependentResources();
-	InitializeDeviceResources();
-	InitializeSizeDependentResources();
-}
-
-void DirectXPanelBase::OnUnloaded( Object^ sender, RoutedEventArgs^ e )
+DirectXPanelBase::~DirectXPanelBase()
 {
 	LOCK;
 	initialized_ = false;
@@ -62,6 +53,14 @@ void DirectXPanelBase::OnUnloaded( Object^ sender, RoutedEventArgs^ e )
 	ReleaseDeviceResources();
 	ReleaseDeviceIndependentResources();
 	ReleaseEventHandlers();
+}
+
+void DirectXPanelBase::Initialize()
+{
+	LOCK;
+	InitializeDeviceIndependentResources();
+	InitializeDeviceResources();
+	InitializeSizeDependentResources();
 }
 
 void DirectXPanelBase::Present()
@@ -292,7 +291,6 @@ void DirectXPanelBase::ReleaseEventHandlers()
 {
 	Application::Current->Suspending -= suspendingEventToken_;
 	Application::Current->Resuming -= resumingEventToken_;
-	Unloaded -= unloadedEventToken_;
 	SizeChanged -= sizeChangedEventToken_;
 	CompositionScaleChanged -= compositionScaleChangedEventToken_;
 	

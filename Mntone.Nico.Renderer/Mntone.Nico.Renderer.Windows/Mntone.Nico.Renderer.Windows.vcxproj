@@ -28,7 +28,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4c275045-4b19-4fec-8ff0-be34376e8f68}</ProjectGuid>
-    <RootNamespace>Mntone</RootNamespace>
+    <RootNamespace>Mntone.Nico.Renderer</RootNamespace>
     <DefaultLanguage>ja-JP</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

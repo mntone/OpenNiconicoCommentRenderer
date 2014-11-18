@@ -23,6 +23,7 @@ namespace nico { namespace renderer {
 		NICORIMP explicit renderer( renderer_driver& driver );
 
 	public:
+		NICORIMP void reset() noexcept;
 #if _WINRT_DLL
 		NICORIMP void add( ::Mntone::Nico::Renderer::IComment^ comment ) noexcept;
 #else

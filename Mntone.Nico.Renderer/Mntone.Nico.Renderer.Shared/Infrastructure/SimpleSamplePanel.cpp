@@ -6,7 +6,7 @@ using namespace D2D1;
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Globalization::DateTimeFormatting;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 SimpleSamplePanel::SimpleSamplePanel()
 	: DirectXDynamicPanelBase( DXGI_ALPHA_MODE_PREMULTIPLIED )

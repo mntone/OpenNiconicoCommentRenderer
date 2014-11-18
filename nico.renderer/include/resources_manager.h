@@ -57,6 +57,12 @@ namespace nico { namespace renderer {
 			return availble_comments_.erase( itr );
 		}
 
+		void reset()
+		{
+			comments_pool_.insert( comments_pool_.cend(), availble_comments_.begin(), availble_comments_.end() );
+			availble_comments_.clear();
+		}
+
 	protected:
 		mutable std::shared_ptr<std::mutex> mutex_;
 		std::array<rendering_comment, maximum_comment_visible_count> comments_;

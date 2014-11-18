@@ -2,7 +2,7 @@
 #include "DirectXHelper.h"
 
 using namespace Platform;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 void DirectXHelper::CheckHResult( HRESULT hr )
 {

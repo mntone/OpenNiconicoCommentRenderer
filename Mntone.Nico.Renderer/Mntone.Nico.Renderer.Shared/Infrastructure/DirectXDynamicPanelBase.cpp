@@ -10,7 +10,7 @@ using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 using namespace Windows::System::Threading;
 using namespace Windows::UI::Xaml;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 #define LOCK lock_guard<mutex> locker( mutex_ );
 
@@ -21,7 +21,7 @@ DirectXDynamicPanelBase::DirectXDynamicPanelBase( DXGI_ALPHA_MODE alphaMode )
 	renderingEventToken_ = Rendering += ref new DirectXRenderingHandler( this, &DirectXDynamicPanelBase::OnRendering );
 }
 
-void DirectXDynamicPanelBase::OnUnloaded( Object^ sender, RoutedEventArgs^ e )
+DirectXDynamicPanelBase::~DirectXDynamicPanelBase()
 {
 	Rendering -= renderingEventToken_;
 }

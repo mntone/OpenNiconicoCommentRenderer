@@ -2,17 +2,20 @@
 #include "DirectXPanelBase.h"
 #include "DirectXRenderingHandler.h"
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
+	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class DirectXStaticPanelBase
 		: public DirectXPanelBase
 	{
 	protected private:
 		DirectXStaticPanelBase( DXGI_ALPHA_MODE alphaMode );
 
+	public:
+		virtual ~DirectXStaticPanelBase();
+
 	protected private:
 		virtual void OnResuming( ::Platform::Object^ sender, ::Platform::Object^ args ) override sealed;
-		virtual void OnUnloaded( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e ) override sealed;
 		virtual void OnSizeChanged( ::Platform::Object^ sender, ::Windows::UI::Xaml::SizeChangedEventArgs^ e ) override sealed;
 		virtual void OnCompositionScaleChanged( ::Windows::UI::Xaml::Controls::SwapChainPanel^ sender, ::Platform::Object^ args ) override sealed;
 		virtual void OnDeviceLost() override sealed;
@@ -47,4 +50,4 @@ namespace Mntone { namespace DirectX {
 		static ::Windows::UI::Xaml::DependencyProperty^ IsEnabledProperty_;
 	};
 
-} }
+} } } }

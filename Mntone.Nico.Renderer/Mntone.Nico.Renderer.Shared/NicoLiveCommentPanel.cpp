@@ -7,7 +7,7 @@ using namespace D2D1;
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Globalization::DateTimeFormatting;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 using namespace nico::renderer;
 using namespace Mntone::Nico::Renderer;
 
@@ -22,6 +22,11 @@ NicoLiveCommentPanel::NicoLiveCommentPanel()
 void NicoLiveCommentPanel::AddComment( IComment^ comment )
 {
 	renderer_->add( comment );
+}
+
+void NicoLiveCommentPanel::ResetComment()
+{
+	renderer_->reset();
 }
 
 void NicoLiveCommentPanel::OnDeviceIndependentResourcesInitialized()

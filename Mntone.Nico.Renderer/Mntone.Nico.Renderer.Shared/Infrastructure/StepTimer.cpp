@@ -3,7 +3,7 @@
 
 using namespace Platform;
 using namespace std;
-using namespace Mntone::DirectX;
+using namespace Mntone::Nico::Renderer::DirectX;
 
 StepTimer::StepTimer()
 {

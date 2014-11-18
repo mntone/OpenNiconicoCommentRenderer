@@ -14,6 +14,7 @@ namespace Mntone { namespace Nico { namespace Renderer {
 		NicoLiveCommentPanel();
 
 		void AddComment( IComment^ comment );
+		void ResetComment();
 
 	protected:
 		virtual void OnDeviceIndependentResourcesInitialized() override;

@@ -3,7 +3,7 @@
 #include "DirectXRenderingHandler.h"
 #include "StepTimer.h"
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class DirectXDynamicPanelBase
@@ -13,6 +13,8 @@ namespace Mntone { namespace DirectX {
 		DirectXDynamicPanelBase( DXGI_ALPHA_MODE alphaMode );
 
 	public:
+		virtual ~DirectXDynamicPanelBase();
+
 		void StartRendering();
 		void EndRendering();
 
@@ -22,7 +24,6 @@ namespace Mntone { namespace DirectX {
 	protected private:
 		virtual void OnSuspending( ::Platform::Object^ sender, ::Windows::ApplicationModel::SuspendingEventArgs^ e ) override sealed;
 		virtual void OnResuming( ::Platform::Object^ sender, ::Platform::Object^ args ) override sealed;
-		virtual void OnUnloaded( ::Platform::Object^ sender, ::Windows::UI::Xaml::RoutedEventArgs^ e ) override sealed;
 
 	private:
 		void Render();
@@ -61,4 +62,4 @@ namespace Mntone { namespace DirectX {
 		static ::Windows::UI::Xaml::DependencyProperty^ IsEnabledProperty_;
 	};
 
-} }
+} } } }

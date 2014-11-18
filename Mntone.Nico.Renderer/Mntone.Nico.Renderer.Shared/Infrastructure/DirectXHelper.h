@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Mntone { namespace DirectX {
+namespace Mntone { namespace Nico { namespace Renderer { namespace DirectX {
 
 	ref class DirectXHelper sealed
 	{
@@ -8,4 +8,4 @@ namespace Mntone { namespace DirectX {
 		static void CheckHResult( HRESULT hr );
 	};
 
-} }
+} } } }
