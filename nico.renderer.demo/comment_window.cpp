@@ -35,6 +35,10 @@ LRESULT comment_window::window_procedure( window_message message, WPARAM wparam,
 		{
 			cmtsvr_->autotest();
 		}
+		else if( reset_button_.is_self( hwnd ) )
+		{
+			cmtsvr_->reset();
+		}
 		else if( regular_radio_.is_self( hwnd ) )
 		{
 			top_radio_.set_checked( false );
@@ -124,6 +128,11 @@ HRESULT comment_window::on_create() noexcept
 	autotest_button_.set_top( related_control_spacing + post_button_.bottom() );
 	autotest_button_.set_left( width() - default_window_padding - autotest_button_.width() );
 	add_button( autotest_button_ );
+
+	reset_button_.set_text( L"ƒŠƒZƒbƒg" );
+	reset_button_.set_top( autotest_button_.top() );
+	reset_button_.set_left( autotest_button_.left() - related_control_spacing - autotest_button_.width() );
+	add_button( reset_button_ );
 
 	return S_OK;
 }

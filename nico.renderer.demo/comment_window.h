@@ -21,5 +21,5 @@ private:
 
 	mnfx::edit_box command_box_, comment_box_;
 	mnfx::radio_button regular_radio_, top_radio_, both_radio_, bottom_radio_;
-	mnfx::button post_button_, autotest_button_;
+	mnfx::button post_button_, autotest_button_, reset_button_;
 };

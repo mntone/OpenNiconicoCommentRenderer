@@ -5,10 +5,12 @@ using namespace nico::renderer;
 
 void virtual_comment_server::add_handler(
 	std::function<void( const std::shared_ptr<comment_sample> )> comment_handler,
-	std::function<void( const comment_mode_type )> comment_mode_handler ) noexcept
+	std::function<void( const comment_mode_type )> comment_mode_handler,
+	std::function<void()> reset_handler ) noexcept
 {
 	comment_handler_ = comment_handler;
 	comment_mode_handler_ = comment_mode_handler;
+	reset_handler_ = reset_handler;
 }
 
 void virtual_comment_server::post( const std::shared_ptr<comment_sample> comment ) const noexcept
@@ -41,5 +43,13 @@ void virtual_comment_server::autotest() const noexcept
 		comment_handler_( std::make_shared<comment_sample>( L"ながあああああああああああああいおつきあい。京都銀行", false, false, comment_vertical_position_type::center, comment_size_type::medium, 0xffffff ) );
 		comment_handler_( std::make_shared<comment_sample>( L"Super Mario BROS. プレイしようぜ!", false, false, comment_vertical_position_type::center, comment_size_type::medium, 0 ) );
 		comment_handler_( std::make_shared<comment_sample>( L"てってってー", false, false, comment_vertical_position_type::center, comment_size_type::large, 0x00cc66 ) );
+	}
+}
+
+void virtual_comment_server::reset() const noexcept
+{
+	if( reset_handler_ )
+	{
+		reset_handler_();
 	}
 }
