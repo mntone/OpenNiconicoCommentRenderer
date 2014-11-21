@@ -26,6 +26,7 @@ protected:
 private:
 	void on_comment( const std::shared_ptr<comment_sample> comment );
 	void on_comment_mode_changed( const comment_mode_type mode );
+	void on_scale_changed( float scale );
 	void on_reset();
 
 private:

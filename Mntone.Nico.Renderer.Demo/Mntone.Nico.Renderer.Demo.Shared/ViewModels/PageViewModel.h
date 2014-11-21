@@ -12,9 +12,11 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 
 	private:
 		static void OnCommentModeChanged( ::Windows::UI::Xaml::DependencyObject^ d, ::Windows::UI::Xaml::DependencyPropertyChangedEventArgs^ e );
+		static void OnCommentScaleChanged( ::Windows::UI::Xaml::DependencyObject^ d, ::Windows::UI::Xaml::DependencyPropertyChangedEventArgs^ e );
 		
 	public:
 		event Windows::UI::Xaml::DependencyPropertyChangedEventHandler^ CommentModeChanged;
+		event Windows::UI::Xaml::DependencyPropertyChangedEventHandler^ CommentScaleChanged;
 
 	internal:
 		property Core::VirtualCommentServerService^ CommentServer
@@ -31,6 +33,11 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 		{
 			CommentModeType get();
 			void set( CommentModeType value );
+		}
+		property float32 CommentScale
+		{
+			float32 get();
+			void set( float32 value );
 		}
 		property Xamcc::Commands::RelayCommand^ SendCommand
 		{
@@ -59,6 +66,10 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 		{
 			::Windows::UI::Xaml::DependencyProperty^ get() { return CommentModeProperty_; }
 		}
+		static property ::Windows::UI::Xaml::DependencyProperty^ CommentScaleProperty
+		{
+			::Windows::UI::Xaml::DependencyProperty^ get() { return CommentScaleProperty_; }
+		}
 
 	private:
 		Core::VirtualCommentServerService^ CommentServer_;
@@ -67,7 +78,8 @@ namespace Mntone { namespace Nico { namespace Renderer { namespace Demo { namesp
 			^ ValueProperty_,
 			^ SendCommandProperty_,
 			^ AutoTestCommandProperty_,
-			^ CommentModeProperty_;
+			^ CommentModeProperty_,
+			^ CommentScaleProperty_;
 	};
 
 } } } } }

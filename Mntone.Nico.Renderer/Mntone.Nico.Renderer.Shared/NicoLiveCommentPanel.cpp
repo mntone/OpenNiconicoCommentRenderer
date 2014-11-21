@@ -103,3 +103,13 @@ void NicoLiveCommentPanel::CommentMode::set( CommentModeType value )
 {
 	renderer_->set_mode( static_cast<comment_mode_type>( value ) );
 }
+
+float32 NicoLiveCommentPanel::CommentScale::get()
+{
+	return static_cast<float32>( renderer_->scale() );
+}
+
+void NicoLiveCommentPanel::CommentScale::set( float32 value )
+{
+	renderer_->set_scale( static_cast<comment_scale>( value ) );
+}

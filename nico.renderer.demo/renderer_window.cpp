@@ -12,6 +12,7 @@ renderer_window::renderer_window( const std::shared_ptr<virtual_comment_server> 
 	cmtsvr_->add_handler(
 		std::bind( std::mem_fn( &renderer_window::on_comment ), this, std::placeholders::_1 ),
 		std::bind( std::mem_fn( &renderer_window::on_comment_mode_changed ), this, std::placeholders::_1 ),
+		std::bind( std::mem_fn( &renderer_window::on_scale_changed ), this, std::placeholders::_1 ),
 		std::bind( std::mem_fn( &renderer_window::on_reset ), this ) );
 }
 
@@ -95,6 +96,11 @@ void renderer_window::on_comment( const std::shared_ptr<comment_sample> comment 
 void renderer_window::on_comment_mode_changed( const comment_mode_type mode )
 {
 	renderer_.set_mode( mode );
+}
+
+void renderer_window::on_scale_changed( float scale )
+{
+	renderer_.set_scale( scale );
 }
 
 void renderer_window::on_reset()

@@ -33,6 +33,11 @@ namespace Mntone { namespace Nico { namespace Renderer {
 			CommentModeType get();
 			void set( CommentModeType value );
 		}
+		property float32 CommentScale
+		{
+			float32 get();
+			void set( float32 value );
+		}
 
 	private:
 		::std::shared_ptr<::nico::renderer::renderer> renderer_;

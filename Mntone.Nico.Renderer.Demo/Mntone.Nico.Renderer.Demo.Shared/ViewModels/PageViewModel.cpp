@@ -110,6 +110,15 @@ void PageViewModel::OnCommentModeChanged( DependencyObject^ d, DependencyPropert
 	}
 }
 
+void PageViewModel::OnCommentScaleChanged( DependencyObject^ d, DependencyPropertyChangedEventArgs^ e )
+{
+	auto that = dynamic_cast<PageViewModel^>( d );
+	if( that )
+	{
+		that->CommentScaleChanged( that, e );
+	}
+}
+
 IMPL_DP_GETSET( PageViewModel, String, Value, PropertyMetadata::Create( "" ) )
 
 CommentModeType PageViewModel::CommentMode::get()
@@ -129,5 +138,6 @@ DependencyProperty^ PageViewModel::CommentModeProperty_ = DependencyProperty::Re
 	PageViewModel::typeid,
 	PropertyMetadata::Create( 0, ref new PropertyChangedCallback( &PageViewModel::OnCommentModeChanged ) ) );
 
+IMPL_DP_VALUE_GETSET( PageViewModel, float, CommentScale, PropertyMetadata::Create( 1.f, ref new PropertyChangedCallback( &PageViewModel::OnCommentScaleChanged ) ) )
 IMPL_DP_GETSET( PageViewModel, RelayCommand, SendCommand, nullptr )
 IMPL_DP_GETSET( PageViewModel, RelayCommand, AutoTestCommand, nullptr )

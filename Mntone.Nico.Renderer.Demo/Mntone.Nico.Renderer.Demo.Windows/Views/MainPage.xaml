@@ -46,7 +46,7 @@
 							MediaOpened="OnMediaOpened" />
 						<nicor:NicoLiveCommentPanel
 							x:Name="commentLayer"
-							Canvas.ZIndex="2"/>
+							Canvas.ZIndex="2" />
 					</Canvas>
 				</Border>
 
@@ -89,7 +89,10 @@
 						Content="オートテスト" />
 					<Button
 						Content="リセット"
-						Click="OnResetButtonClick"/>
+						Click="OnResetButtonClick" />
+					<TextBox
+						Width="40"
+						Text="{Binding CommentScale, Mode=TwoWay}" />
 				</StackPanel>
 			</Grid>
 		</Grid>

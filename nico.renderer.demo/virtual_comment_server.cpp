@@ -6,10 +6,12 @@ using namespace nico::renderer;
 void virtual_comment_server::add_handler(
 	std::function<void( const std::shared_ptr<comment_sample> )> comment_handler,
 	std::function<void( const comment_mode_type )> comment_mode_handler,
+	std::function<void( float )> scale_handler,
 	std::function<void()> reset_handler ) noexcept
 {
 	comment_handler_ = comment_handler;
 	comment_mode_handler_ = comment_mode_handler;
+	scale_handler_ = scale_handler;
 	reset_handler_ = reset_handler;
 }
 
@@ -26,6 +28,14 @@ void virtual_comment_server::change_mode( const nico::renderer::comment_mode_typ
 	if( comment_mode_handler_ )
 	{
 		comment_mode_handler_( mode );
+	}
+}
+
+void virtual_comment_server::change_scale( float scale ) const noexcept
+{
+	if( scale_handler_ )
+	{
+		scale_handler_( scale );
 	}
 }
 

@@ -32,6 +32,12 @@ namespace nico { namespace renderer {
 		NICORIMP void prepare() noexcept;
 		NICORIMP void render() const noexcept;
 
+		comment_scale scale() const noexcept { return scale_; }
+		void set_scale( comment_scale value ) noexcept
+		{
+			scale_ = std::move( value );
+		}
+
 	private:
 		void set_time( rendering_comment& comment ) noexcept;
 		void set_size( rendering_comment& comment ) noexcept;
@@ -54,9 +60,11 @@ namespace nico { namespace renderer {
 	private:
 		const comment_time default_show_time = std::chrono::seconds( 5 );
 		const comment_time top_or_bottom_show_time = std::chrono::seconds( 3 );
+		const comment_position minimum_font_size = static_cast<comment_position>( 12 );
 
 		renderer_driver& driver_;
 		std::mt19937 mt_;
+		comment_scale scale_;
 	};
 
 } }

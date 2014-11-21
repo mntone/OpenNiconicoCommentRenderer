@@ -46,6 +46,15 @@ MainPage::MainPage()
 			that->commentLayer->CommentMode = static_cast<CommentModeType>( newValue->Value + 1 );
 		}
 	} );
+	PageViewModel->CommentScaleChanged += ref new DependencyPropertyChangedEventHandler( [wr]( Object^ sender, DependencyPropertyChangedEventArgs^ e )
+	{
+		auto newValue = dynamic_cast<IBox<float32>^>( e->NewValue );
+		if( newValue )
+		{
+			auto that = wr.Resolve<MainPage>();
+			that->commentLayer->CommentScale = newValue->Value;
+		}
+	} );
 }
 
 void MainPage::OnPageLoaded( Object^ sender, RoutedEventArgs^ e )

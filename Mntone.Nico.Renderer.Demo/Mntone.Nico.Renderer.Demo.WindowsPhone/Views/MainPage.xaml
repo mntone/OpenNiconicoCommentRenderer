@@ -111,6 +111,9 @@
 				<Button
 					Content="リセット"
 					Click="OnResetButtonClick" />
+				<TextBox
+					Width="40"
+					Text="{Binding CommentScale, Mode=TwoWay}" />
 			</StackPanel>
 		</ScrollViewer>
 		<VisualStateManager.VisualStateGroups>

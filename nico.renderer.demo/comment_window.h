@@ -19,7 +19,7 @@ protected:
 private:
 	std::shared_ptr<virtual_comment_server> cmtsvr_;
 
-	mnfx::edit_box command_box_, comment_box_;
+	mnfx::edit_box command_box_, comment_box_, scale_box_;
 	mnfx::radio_button regular_radio_, top_radio_, both_radio_, bottom_radio_;
-	mnfx::button post_button_, autotest_button_, reset_button_;
+	mnfx::button post_button_, autotest_button_, reset_button_, set_scale_button_;
 };

@@ -35,6 +35,8 @@ namespace nico { namespace renderer {
 
 	using comment_time = std::chrono::nanoseconds;
 
+	using comment_scale = float;
+
 	enum class comment_mode_type: uint8_t { default = 1, top, bottom, both, back };
 
 	enum class comment_font_type: uint8_t

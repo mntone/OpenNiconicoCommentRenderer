@@ -9,7 +9,7 @@ comment_window::comment_window( const std::shared_ptr<virtual_comment_server> cm
 {
 	set_text( L"コメント入力ウィンドウ" );
 	set_left( 48 );
-	set_height( 81 );
+	set_height( 114 );
 	set_width( 526 );
 	set_style( style() & ~( WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_THICKFRAME ) );
 }
@@ -38,6 +38,10 @@ LRESULT comment_window::window_procedure( window_message message, WPARAM wparam,
 		else if( reset_button_.is_self( hwnd ) )
 		{
 			cmtsvr_->reset();
+		}
+		else if( set_scale_button_.is_self( hwnd ) )
+		{
+			cmtsvr_->change_scale( stof( scale_box_.text() ) );
 		}
 		else if( regular_radio_.is_self( hwnd ) )
 		{
@@ -133,6 +137,16 @@ HRESULT comment_window::on_create() noexcept
 	reset_button_.set_top( autotest_button_.top() );
 	reset_button_.set_left( autotest_button_.left() - related_control_spacing - autotest_button_.width() );
 	add_button( reset_button_ );
+
+	set_scale_button_.set_text( L"拡大縮小率設定" );
+	set_scale_button_.set_top( related_control_spacing + autotest_button_.bottom() );
+	set_scale_button_.set_left( width() - default_window_padding - autotest_button_.width() );
+	add_button( set_scale_button_ );
+
+	scale_box_.set_text( L"1.0" );
+	scale_box_.set_top( set_scale_button_.top() );
+	scale_box_.set_left( set_scale_button_.left() - related_control_spacing - scale_box_.width() );
+	add_editbox( scale_box_ );
 
 	return S_OK;
 }

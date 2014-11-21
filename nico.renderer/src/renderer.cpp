@@ -7,6 +7,7 @@ using namespace nico::renderer;
 
 renderer::renderer( renderer_driver& driver )
 	: driver_( driver )
+	, scale_( 1.f )
 {
 	comment_analyzer::initialize();
 
@@ -81,6 +82,8 @@ void renderer::set_time( rendering_comment& comment ) noexcept
 
 void renderer::set_size( rendering_comment& comment ) noexcept
 {
+	comment.set_font_size( static_cast<comment_position>( max( minimum_font_size, scale_ * static_cast<float>( comment.font_size() ) ) ) );
+
 	comment_text_info text_info = driver_.text_info( comment );
 	if( text_info.height > one_third_of_height() )
 	{
