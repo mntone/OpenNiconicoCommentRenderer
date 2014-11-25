@@ -89,7 +89,6 @@ void DirectXDynamicPanelBase::StartRenderingInternal()
 
 void DirectXDynamicPanelBase::EndRendering()
 {
-	LOCK;
 	if( loopWorker_ != nullptr )
 	{
 		loopWorker_->Cancel();
