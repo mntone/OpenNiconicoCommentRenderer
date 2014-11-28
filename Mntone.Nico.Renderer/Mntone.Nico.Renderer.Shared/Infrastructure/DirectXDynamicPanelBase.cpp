@@ -127,6 +127,8 @@ void DirectXDynamicPanelBase::OnSizeDependentResourcesInitialized()
 void DirectXDynamicPanelBase::OnSuspending( Object^ sender, SuspendingEventArgs^ e )
 {
 	Suspend();
+
+	DirectXDynamicPanelBase::OnSuspending( sender, e );
 }
 
 void DirectXDynamicPanelBase::OnResuming( Object^ sender, Object^ args )
